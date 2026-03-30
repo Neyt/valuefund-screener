@@ -1,0 +1,42 @@
+{
+  "_comment": "valuefund.substack.com — Scaling Configuration",
+
+  "analysis": {
+    "batch_size": 50,
+    "parallel_workers": 4,
+    "rate_limit_sleep_sec": 1.2,
+    "max_market_cap": 500000000,
+    "min_price": 0.10,
+    "staleness_days": 14,
+    "staleness_price_move_pct": 10.0,
+    "skip_after_n_failures": 3,
+    "request_timeout_sec": 20
+  },
+
+  "database": {
+    "path": "D:\\StockAnalysis\\database\\stocks.db",
+    "skip_registry_path": "D:\\StockAnalysis\\config\\skip_registry.json",
+    "universe_path": "D:\\StockAnalysis\\config\\universe.csv"
+  },
+
+  "dashboard": {
+    "html_path": "D:\\StockAnalysis\\database\\index.html",
+    "page_size": 100,
+    "max_inline_stocks": 500,
+    "use_pagination": true
+  },
+
+  "scheduling": {
+    "daily_run_time": "07:00",
+    "weekend_run": false,
+    "max_daily_stocks": 1000,
+    "rounds_per_run": 20
+  },
+
+  "costs": {
+    "yfinance_cost_per_stock": 0.0,
+    "storage_cost_per_stock_mb": 0.005,
+    "estimated_daily_compute_min": 8.3,
+    "_note": "At 4 parallel workers: 1000 stocks / 4 workers * 1.2s sleep = 5 min fetch + 3 min analysis = ~8 min/day total"
+  }
+}

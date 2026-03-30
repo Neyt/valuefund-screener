@@ -1,0 +1,297 @@
+ticker,exchange,notes,source
+CFBK,OTC,Central Federal Savings & Loan OH,seeded_banks
+LBAI,NASDAQ,Lakeland Bancorp NJ,seeded_banks
+MCBC,NASDAQ,Mackinac Savings Bank MI,seeded_banks
+SVNX,OTC,Seven Oaks Bancorp NC,seeded_banks
+WMPN,OTC,William Penn Bancorp PA,seeded_banks
+CBNK,NASDAQ,Capital Bancorp MD,seeded_banks
+MOFG,NASDAQ,MidWest One Financial IA,seeded_banks
+HMNF,NASDAQ,HMN Financial MN,seeded_banks
+OFED,OTC,Oconee Federal Financial SC,seeded_banks
+ECBK,OTC,ECB Bancorp MA,seeded_banks
+ALRS,OTC,Alerus Financial ND,seeded_banks
+CZBS,OTC,Citizens Bancshares GA,seeded_banks
+FBMS,NASDAQ,First Bancshares MS,seeded_banks
+CARE,NASDAQ,Carter Bankshares VA,seeded_banks
+AMNB,NASDAQ,American National Bankshares VA,seeded_banks
+ASRV,OTC,AmeriServ Financial PA,seeded_banks
+BKSC,NASDAQ,Bank of South Carolina,seeded_banks
+CLBK,OTC,Columbia Financial NJ OTC,seeded_banks
+BFIN,NASDAQ,BankFinancial Corp IL,seeded_banks
+SBSI,NASDAQ,Southside Bancshares TX,seeded_banks
+UBFO,NASDAQ,United Fire Group IA,seeded_banks
+AROW,NASDAQ,Arrow Financial NY,seeded_banks
+TBNK,NASDAQ,Territorial Savings Guam HI,seeded_banks
+TCBK,NASDAQ,TriCounties Bank CA,seeded_banks
+SRCE,NASDAQ,1st Source Bank IN,seeded_banks
+IROQ,OTC,IF Bancorp IL,seeded_banks
+PBHC,OTC,Pathfinder Bancorp NY,seeded_banks
+BCML,OTC,BayCom Corp CA,seeded_banks
+BFBC,OTC,Bay Banks of Virginia,seeded_banks
+FSBW,NASDAQ,FS Bancorp WA,seeded_banks
+GBNK,NASDAQ,Guaranty Bancshares TX,seeded_banks
+HBMD,NASDAQ,Howard Bancorp MD,seeded_banks
+HTLF,NASDAQ,Heartland Financial USA,seeded_banks
+IBTX,NASDAQ,Independent Bank Group TX,seeded_banks
+LAKE,NASDAQ,Lakeland Bancorp NJ,seeded_banks
+MFBP,OTC,MainFirst Banking OTC,seeded_banks
+OFBK,OTC,Old Fort Banking OH,seeded_banks
+PFLC,OTC,Pacific Financial Corp WA,seeded_banks
+PPBI,NASDAQ,Pacific Premier Bancorp CA,seeded_banks
+PVBC,OTC,Provident Bancorp MA,seeded_banks
+SBFG,OTC,SB Financial Group OH,seeded_banks
+SMBK,NASDAQ,SmartFinancial Bancorp TN,seeded_banks
+STBA,NASDAQ,S&T Bancorp PA,seeded_banks
+SVVB,OTC,Summit Financial Group WV,seeded_banks
+TROW,OTC,Total Community Holdings,seeded_banks
+UBSI,NASDAQ,United Bankshares WV,seeded_banks
+UCBI,NASDAQ,United Community Banks GA,seeded_banks
+VBFC,OTC,Village Bank and Trust VA,seeded_banks
+WBKC,OTC,Wolverine Bancorp MI,seeded_banks
+HOLO,NASDAQ/OTC,Low P/E,screener
+CNGGF,NASDAQ/OTC,Low P/E,screener
+KEGX,NASDAQ/OTC,Low P/E,screener
+TRZBF,NASDAQ/OTC,Low P/E,screener
+MHUAF,NASDAQ/OTC,Low P/E,screener
+MXTRF,NASDAQ/OTC,Low P/E,screener
+STGZ,NASDAQ/OTC,Low P/E,screener
+DOMH,NASDAQ/OTC,Low P/E,screener
+JTAI,NASDAQ/OTC,Low P/E,screener
+BLMH,NASDAQ/OTC,Low P/E,screener
+BMXI,NASDAQ/OTC,Low P/E,screener
+KNBA,NASDAQ/OTC,Low P/E,screener
+SILEF,NASDAQ/OTC,Low P/E,screener
+SAFX,NASDAQ/OTC,Low P/E,screener
+DFEL,NASDAQ/OTC,Low P/E,screener
+SNLKF,NASDAQ/OTC,Low P/E,screener
+AJLGF,NASDAQ/OTC,Low P/E,screener
+GSMGF,NASDAQ/OTC,Low P/E,screener
+HIRU,NASDAQ/OTC,Low P/E,screener
+RGS,NASDAQ/OTC,Low P/E,screener
+MASK,NASDAQ/OTC,Low P/E,screener
+ITHDF,NASDAQ/OTC,Low P/E,screener
+OCNB,NASDAQ/OTC,Low P/E,screener
+LANZ,NASDAQ/OTC,Low P/E,screener
+JXG,NASDAQ/OTC,Low P/E,screener
+WW,NASDAQ/OTC,Low P/E,screener
+XYF,NASDAQ/OTC,Low P/E,screener
+GTEC,NASDAQ/OTC,Low P/E,screener
+MLGO,NASDAQ/OTC,Low P/E,screener
+MLMC,NASDAQ/OTC,Low P/E,screener
+PNTZF,NASDAQ/OTC,Low P/E,screener
+SBLRF,NASDAQ/OTC,Low P/E,screener
+BTCS,NASDAQ/OTC,Low P/E,screener
+HAO,NASDAQ/OTC,Low P/E,screener
+NGHI,NASDAQ/OTC,Low P/E,screener
+DFDV,NASDAQ/OTC,Low P/E,screener
+ADVB,NASDAQ/OTC,Low P/E,screener
+WIMI,NASDAQ/OTC,Low P/E,screener
+SUIAF,NASDAQ/OTC,Low P/E,screener
+MWCAF,NASDAQ/OTC,Low P/E,screener
+STG,NASDAQ/OTC,Low P/E,screener
+JFIN,NASDAQ/OTC,Low P/E,screener
+PDSSF,NASDAQ/OTC,Low P/E,screener
+KG,NASDAQ/OTC,Low P/E,screener
+MYCOF,NASDAQ/OTC,Low P/E,screener
+ETCC,NASDAQ/OTC,Low P/E,screener
+TASEF,NASDAQ/OTC,Low P/E,screener
+PSHG,NASDAQ/OTC,Low P/E,screener
+AIJTY,NASDAQ/OTC,Low P/E,screener
+JFU,NASDAQ/OTC,Low P/E,screener
+TOPS,NASDAQ/OTC,Low P/E,screener
+SVNNF,NASDAQ/OTC,Low P/E,screener
+MGPHF,NASDAQ/OTC,Low P/E,screener
+EHLD,NASDAQ/OTC,Low P/E,screener
+TVIPF,NASDAQ/OTC,Low P/E,screener
+APPCF,NASDAQ/OTC,Low P/E,screener
+HYHDF,NASDAQ/OTC,Low P/E,screener
+SGTM,NASDAQ/OTC,Low P/E,screener
+HXHX,NASDAQ/OTC,Low P/E,screener
+POWMF,NASDAQ/OTC,Low P/E,screener
+NWPIF,NASDAQ/OTC,Low P/E,screener
+SITC,NASDAQ/OTC,Low P/E,screener
+ARYMF,NASDAQ/OTC,Low P/E,screener
+HGPI,NASDAQ/OTC,Low P/E,screener
+CGFEF,NASDAQ/OTC,Low P/E,screener
+BTTC,NASDAQ/OTC,Low P/E,screener
+RENT,NASDAQ/OTC,Low P/E,screener
+WSTL,NASDAQ/OTC,Low P/E,screener
+NMPRY,NASDAQ/OTC,Low P/E,screener
+ATRA,NASDAQ/OTC,Low P/E,screener
+HUAGF,NASDAQ/OTC,Low P/E,screener
+BLSIF,NASDAQ/OTC,Low P/E,screener
+TRRPF,NASDAQ/OTC,Low P/E,screener
+TLF,NASDAQ/OTC,Low P/E,screener
+BTMD,NASDAQ/OTC,Low P/E,screener
+GBCMF,NASDAQ/OTC,Low P/E,screener
+GBCMY,NASDAQ/OTC,Low P/E,screener
+SPOFF,NASDAQ/OTC,Low P/E,screener
+KF,NASDAQ/OTC,Low P/E,screener
+WETH,NASDAQ/OTC,Low P/E,screener
+LINSA,NASDAQ/OTC,Low P/E,screener
+TKLF,NASDAQ/OTC,Low P/E,screener
+MVO,NASDAQ/OTC,Low P/E,screener
+LFBCF,NASDAQ/OTC,Low P/E,screener
+CTNMF,NASDAQ/OTC,Low P/E,screener
+TWG,NASDAQ/OTC,Low P/E,screener
+TLIH,NASDAQ/OTC,Low P/E,screener
+LIVE,NASDAQ/OTC,Low P/E,screener
+ASXSF,NASDAQ/OTC,Low P/E,screener
+TGE,NASDAQ/OTC,Low P/E,screener
+DLNG,NASDAQ/OTC,Low P/E,screener
+DDWWF,NASDAQ/OTC,Low P/E,screener
+LHSW,NASDAQ/OTC,Low P/E,screener
+EDUC,NASDAQ/OTC,Low P/E,screener
+SPMMF,NASDAQ/OTC,Low P/E,screener
+WEGYF,NASDAQ/OTC,Low P/E,screener
+QTTB,NASDAQ/OTC,Low P/E,screener
+OPESF,NASDAQ/OTC,Low P/E,screener
+DDEJF,NASDAQ/OTC,Low P/E,screener
+MSGM,NASDAQ/OTC,Low P/E,screener
+BXSY,NASDAQ/OTC,Low P/E,screener
+ASPU,NASDAQ/OTC,Low P/E,screener
+NEON,NASDAQ/OTC,Low P/E,screener
+GF,NASDAQ/OTC,Low P/E,screener
+AISP,NASDAQ/OTC,Low P/E,screener
+BCV,NASDAQ/OTC,Low P/E,screener
+BCV-PA,NASDAQ/OTC,Low P/E,screener
+CLMHF,NASDAQ/OTC,Low P/E,screener
+MISVF,NASDAQ/OTC,Low P/E,screener
+TEI,NASDAQ/OTC,Low P/E,screener
+ORXGF,NASDAQ/OTC,Low P/E,screener
+IMMR,NASDAQ/OTC,Low P/E,screener
+YRBAF,NASDAQ/OTC,Low P/E,screener
+MMJJF,NASDAQ/OTC,Low P/E,screener
+LGPS,NASDAQ/OTC,Low P/E,screener
+CEE,NASDAQ/OTC,Low P/E,screener
+OTTEF,NASDAQ/OTC,Low P/E,screener
+CYCA,NASDAQ/OTC,Low P/E,screener
+AEF,NASDAQ/OTC,Low P/E,screener
+ECF,NASDAQ/OTC,Low P/E,screener
+ECF-PA,NASDAQ/OTC,Low P/E,screener
+VIOT,NASDAQ/OTC,Low P/E,screener
+TVAGF,NASDAQ/OTC,Low P/E,screener
+PLGDF,NASDAQ/OTC,Low P/E,screener
+FXBY,NASDAQ/OTC,Low P/E,screener
+UCPLF,NASDAQ/OTC,Low P/E,screener
+MCCHF,NASDAQ/OTC,Low P/E,screener
+COHN,NASDAQ/OTC,Low P/E,screener
+GSL-PB,NASDAQ/OTC,Low P/E,screener
+LUCRF,NASDAQ/OTC,Low P/E,screener
+SLRK,NASDAQ/OTC,Low P/E,screener
+IMPP,NASDAQ/OTC,Low P/E,screener
+ORMP,NASDAQ/OTC,Low P/E,screener
+MHGU,NASDAQ/OTC,Low P/E,screener
+LRE,NASDAQ/OTC,Low P/E,screener
+TDF,NASDAQ/OTC,Low P/E,screener
+EEA,NASDAQ/OTC,Low P/E,screener
+VGMIF,NASDAQ/OTC,Low P/E,screener
+GOGAF,NASDAQ/OTC,Low P/E,screener
+MDBH,NASDAQ/OTC,Low P/E,screener
+ELRNF,NASDAQ/OTC,Low P/E,screener
+LEKOF,NASDAQ/OTC,Low P/E,screener
+GTMAY,NASDAQ/OTC,Low P/E,screener
+SGQRF,NASDAQ/OTC,Low P/E,screener
+TULP,NASDAQ/OTC,Low P/E,screener
+MXF,NASDAQ/OTC,Low P/E,screener
+MMTMF,NASDAQ/OTC,Low P/E,screener
+NGELF,NASDAQ/OTC,Low P/E,screener
+CBWTF,NASDAQ/OTC,Low P/E,screener
+DVSPF,NASDAQ/OTC,Low P/E,screener
+STLE,NASDAQ/OTC,Low P/E,screener
+CLCFF,NASDAQ/OTC,Low P/E,screener
+CLSPF,NASDAQ/OTC,Low P/E,screener
+GGT,NASDAQ/OTC,Low P/E,screener
+GLU,NASDAQ/OTC,Low P/E,screener
+ACPS,NASDAQ/OTC,Low P/E,screener
+PTGOF,NASDAQ/OTC,Low P/E,screener
+PGP,NASDAQ/OTC,Low P/E,screener
+GCV,NASDAQ/OTC,Low P/E,screener
+UBAAF,NASDAQ/OTC,Low P/E,screener
+URNAF,NASDAQ/OTC,Low P/E,screener
+SVTNF,NASDAQ/OTC,Low P/E,screener
+LKCRU,NASDAQ/OTC,Low P/E,screener
+TEKCF,NASDAQ/OTC,Low P/E,screener
+ZMDTF,NASDAQ/OTC,Low P/E,screener
+GLQ,NASDAQ/OTC,Low P/E,screener
+DSWL,NASDAQ/OTC,Low P/E,screener
+WYHG,NASDAQ/OTC,Low P/E,screener
+AMCX,NASDAQ/OTC,Low P/E,screener
+SRSSF,NASDAQ/OTC,Low P/E,screener
+JMPHF,NASDAQ/OTC,Low P/E,screener
+WNMLA,NASDAQ/OTC,Low P/E,screener
+KRCLF,NASDAQ/OTC,Low P/E,screener
+ALTS,NASDAQ/OTC,Low P/E,screener
+SNYR,NASDAQ/OTC,Low P/E,screener
+STCB,NASDAQ/OTC,Low P/E,screener
+TVCCF,NASDAQ/OTC,Low P/E,screener
+AGLDF,NASDAQ/OTC,Low P/E,screener
+IZM,NASDAQ/OTC,Low P/E,screener
+MSGY,NASDAQ/OTC,Low P/E,screener
+AMBO,NASDAQ/OTC,Low P/E,screener
+KCKSF,NASDAQ/OTC,Low P/E,screener
+CRSTF,NASDAQ/OTC,Low P/E,screener
+FOA,NASDAQ/OTC,Low P/E,screener
+CRE,NASDAQ/OTC,Low P/E,screener
+ABEO,NASDAQ/OTC,Low P/E,screener
+GUGNF,NASDAQ/OTC,Low P/E,screener
+ICMB,NASDAQ/OTC,Low P/E,screener
+BKLPF,NASDAQ/OTC,Low P/E,screener
+ESLGF,NASDAQ/OTC,Low P/E,screener
+TJSCF,NASDAQ/OTC,Low P/E,screener
+AOMR,NASDAQ/OTC,Low P/E,screener
+AGRZ,NASDAQ/OTC,Low P/E,screener
+KRKR,NASDAQ/OTC,Low P/E,screener
+GDEV,NASDAQ/OTC,Low P/E,screener
+AREN,NASDAQ/OTC,Low P/E,screener
+CHKR,NASDAQ/OTC,Low P/E,screener
+IVCHF,NASDAQ/OTC,Low P/E,screener
+GHG,NASDAQ/OTC,Low P/E,screener
+GRRLF,NASDAQ/OTC,Low P/E,screener
+CAAS,NASDAQ/OTC,Low P/E,screener
+CFNB,NASDAQ/OTC,Low P/E,screener
+BMNM,NASDAQ/OTC,Low P/E,screener
+PARK,NASDAQ/OTC,Low P/E,screener
+GNLAF,NASDAQ/OTC,Low P/E,screener
+CGO,NASDAQ/OTC,Low P/E,screener
+ATVK,NASDAQ/OTC,Low P/E,screener
+GLO,NASDAQ/OTC,Low P/E,screener
+FUND,NASDAQ/OTC,Low P/E,screener
+BRW,NASDAQ/OTC,Low P/E,screener
+CHNSF,NASDAQ/OTC,Low P/E,screener
+MACT,NASDAQ/OTC,Low P/E,screener
+KRMKF,NASDAQ/OTC,Low P/E,screener
+XAUMF,NASDAQ/OTC,Low P/E,screener
+ECTM,NASDAQ/OTC,Low P/E,screener
+EMF,NASDAQ/OTC,Low P/E,screener
+PKTEF,NASDAQ/OTC,Low P/E,screener
+AOREF,NASDAQ/OTC,Low P/E,screener
+BNCM,NASDAQ/OTC,Low P/E,screener
+SSSS,NASDAQ/OTC,Low P/E,screener
+BDTX,NASDAQ/OTC,Low P/E,screener
+CGEN,NASDAQ/OTC,Low P/E,screener
+GDC,NASDAQ/OTC,Low P/E,screener
+RHCO,NASDAQ/OTC,Low P/E,screener
+RAY,NASDAQ/OTC,Low P/E,screener
+CPEVF,NASDAQ/OTC,Low P/E,screener
+STPGF,NASDAQ/OTC,Low P/E,screener
+GLV,NASDAQ/OTC,Low P/E,screener
+NCZ,NASDAQ/OTC,Low P/E,screener
+CHOW,NASDAQ/OTC,Low P/E,screener
+SYYNY,NASDAQ/OTC,Low P/E,screener
+CTLDF,NASDAQ/OTC,Low P/E,screener
+DBCCF,NASDAQ/OTC,Low P/E,screener
+BSEM,NASDAQ/OTC,Low P/E,screener
+MATH,NASDAQ/OTC,Low P/E,screener
+IBATF,NASDAQ/OTC,Low P/E,screener
+CNBA,NASDAQ/OTC,Low P/E,screener
+STCGF,NASDAQ/OTC,Low P/E,screener
+DXR,NASDAQ/OTC,Low P/E,screener
+SRBIF,NASDAQ/OTC,Low P/E,screener
+SFWL,NASDAQ/OTC,Low P/E,screener
+GLMFF,NASDAQ/OTC,Low P/E,screener
+ITMIF,NASDAQ/OTC,Low P/E,screener
+PLLMF,NASDAQ/OTC,Low P/E,screener
+IH,NASDAQ/OTC,Low P/E,screener
+AILTF,NASDAQ/OTC,Low P/E,screener
+ACAZF,NASDAQ/OTC,Low P/E,screener

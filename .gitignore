@@ -1,0 +1,37 @@
+﻿# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Database (regeneratable - too large)
+database/stocks.db
+database/data/
+
+# Generated report docx files
+reports/*.docx
+reports/*.md
+
+# Logs
+logs/
+
+# Temp outputs / scratch
+*.txt
+scripts/fix_*.py
+scripts/patch_*.py
+scripts/upgrade_*.py
+scripts/apply_patch.py
+scripts/check_schema.py
+
+# Config: skip registry (machine-specific)
+config/skip_registry.json
+config/skip_registry.json.tmp
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
