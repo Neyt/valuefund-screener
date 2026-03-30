@@ -750,9 +750,10 @@ def create_database():
 
         grade              TEXT,
 
-        avg_volume         REAL
+                avg_volume         REAL
 
-    '''))
+    )
+    ''')
 
     # Migration: add columns if upgrading
 
