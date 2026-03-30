@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #!/usr/bin/env python3
 
 """
@@ -48,6 +49,14 @@ except ImportError:
     def should_skip_stale(t, p=None): return (False, "")
     def record_failure(t, r): pass
     def record_success(t): pass
+
+try:
+    from qf2_fallback import get_qf2_fundamentals as _qf2_get
+    _HAVE_QF2 = True
+except ImportError:
+    _HAVE_QF2 = False
+    def _qf2_get(t, max_age_years=3): return None
+
 
 
 
@@ -1922,7 +1931,16 @@ def fetch_and_analyze(ticker, exchange, notes):
 
         info  = stock.info or {}
 
-        if len(info) < 5: return None, "No data from yfinance"
+        if len(info) < 5:
+            if _HAVE_QF2:
+                _qf2_stub = _qf2_get(ticker)
+            else:
+                _qf2_stub = None
+            if _qf2_stub is None:
+                return None, "No data from yfinance or QF2"
+            # yfinance has no data but QF2 has fundamentals -- we still need price.
+            # Fall through; price will be fetched below; QF2 data will supplement later.
+            info = {}  # keep empty so price check can bail if truly dead
 
 
 
@@ -1938,7 +1956,7 @@ def fetch_and_analyze(ticker, exchange, notes):
 
         if not price or price < 0.10: return None, f"Price unavailable: {price}"
 
-        if mcap and mcap > 600_000_000: return None, f"Too large: {_fmt_mcap(mcap)}"
+        if mcap and mcap > 2_000_000_000: return None, f"Too large (>): {_fmt_mcap(mcap)}"
 
 
 
@@ -2149,6 +2167,26 @@ def fetch_and_analyze(ticker, exchange, notes):
             avg_volume=av,
 
         )
+
+
+        # -- QF2 FMP SUPPLEMENT: fill gaps for sparse/dead yfinance tickers ----
+        if _HAVE_QF2:
+            _qf2_data = (_qf2_stub if ('_qf2_stub' in dir() and _qf2_stub is not None)
+                         else _qf2_get(ticker))
+            if _qf2_data:
+                def _qfill(key, qkey=None):
+                    qkey = qkey or key
+                    if data.get(key) is None and _qf2_data.get(qkey) is not None:
+                        data[key] = _qf2_data[qkey]
+                _qfill('pe_ratio');      _qfill('pb_ratio')
+                _qfill('roe');           _qfill('gross_margin')
+                _qfill('operating_margin'); _qfill('current_ratio')
+                _qfill('debt_equity');   _qfill('eps')
+                _qfill('bvps');          _qfill('fcf')
+                _qfill('dividend_yield'); _qfill('revenue_growth')
+                if data.get('market_cap') is None and _qf2_data.get('shares') and price:
+                    data['market_cap'] = _qf2_data['shares'] * price
+        # -- end QF2 supplement -----------------------------------------------
 
 
 
