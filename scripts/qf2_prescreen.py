@@ -1,250 +1,193 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
-qf2_prescreen.py  --  Pre-filter ticker universe from QF2 DuckDB (FMP fundamentals)
+qf2_prescreen.py  --  Pre-filter ticker universe from QF2 FMP Parquet cache
 
-Outputs a list of small-cap candidates (<$2B market cap) that pass basic quality
-filters, ready to feed into analyzer.py.
+Reads raw FMP Parquet files (not DuckDB) to avoid DuckDB connection issues.
+Outputs a list of small-cap candidates (<$2B market cap) that pass basic
+quality filters, ready to feed into analyzer.py.
 
 Usage:
     python qf2_prescreen.py                  # prints tickers to stdout
     python qf2_prescreen.py --out tickers.txt
-    python qf2_prescreen.py --max-cap 2e9 --min-revenue 1e6 --limit 500
+    python qf2_prescreen.py --max-cap 2e9 --min-mcap 1e6 --limit 500
 
-Why this exists:
-    yfinance.Ticker.info is slow (~1s per call).  Pre-screening 20k tickers
-    in DuckDB (local SQL) takes < 5 seconds and eliminates shells/zombies/giants
-    before any API calls are made.
+Data source: QF2 FMP Parquet cache (updated ~Feb 2026):
+  D:/quantum fund 2/results/data/qsconnect/cache/fmp/bulk-key-metrics_YEAR_annual-*.parquet
 """
 
-import os, sys, argparse, json
-from datetime import date, timedelta
+import os, sys, argparse, json, glob
+from datetime import date
 
-QF2_DB_PATH = r"D:/quantum fund 2/results/data/qsconnect/database/qsconnect.duckdb"
+FMP_CACHE = r"D:/quantum fund 2/results/data/qsconnect/cache/fmp"
 
-# ---------------------------------------------------------------------------
-# Filters (all optional / configurable via CLI)
-# ---------------------------------------------------------------------------
-DEFAULT_MAX_CAP        = 2_000_000_000   # $2B
-DEFAULT_MIN_REVENUE    = 500_000         # $500K trailing revenue
-DEFAULT_MAX_DEBT_EQ    = 10.0            # debt/equity < 10x
-DEFAULT_MIN_CURRENT    = 0.3             # current ratio > 0.3
-DEFAULT_MAX_NET_LOSS   = -1.00           # net margin > -100% (wipes out annual revenue)
-DEFAULT_CUTOFF_YEARS   = 3               # only use data from last N years
-DEFAULT_LIMIT          = 0               # 0 = no limit
+DEFAULT_MAX_CAP     = 2_000_000_000   # $2B small-cap ceiling
+DEFAULT_MIN_CAP     = 1_000_000       # $1M floor  (strip pink-sheet shells)
+DEFAULT_MIN_REVENUE = 500_000         # $500K trailing revenue
+DEFAULT_MAX_DEBT_EQ = 10.0
+DEFAULT_MIN_CURRENT = 0.3
+DEFAULT_MAX_NET_LOSS = -1.0           # net margin >= -100%
+DEFAULT_YEARS       = [2023, 2024, 2025, 2026]
+DEFAULT_LIMIT       = 0
 
 
-def _connect():
+def _load_parquet(pattern, verbose=False):
+    """Load all Parquet files matching a glob pattern into a DataFrame."""
     try:
-        import duckdb
+        import pandas as pd
     except ImportError:
-        print("[ERROR] duckdb not installed: pip install duckdb", file=sys.stderr)
+        print("[ERROR] pandas not installed: pip install pandas pyarrow", file=sys.stderr)
         sys.exit(1)
-    if not os.path.exists(QF2_DB_PATH):
-        print(f"[ERROR] QF2 DB not found: {QF2_DB_PATH}", file=sys.stderr)
-        sys.exit(1)
-    print(f"[qf2_prescreen] Opening {QF2_DB_PATH} ...", file=sys.stderr)
-    conn = duckdb.connect(QF2_DB_PATH, read_only=True)
-    print("[qf2_prescreen] Connected.", file=sys.stderr)
-    return conn
-
-
-def list_tables(conn):
-    rows = conn.execute("SHOW TABLES").fetchall()
-    return [r[0] for r in rows]
+    files = sorted(glob.glob(pattern))
+    if not files:
+        return None
+    if verbose:
+        print(f"[qf2_prescreen] Loading {len(files)} files: {pattern}", file=sys.stderr)
+    dfs = [pd.read_parquet(f) for f in files]
+    return pd.concat(dfs, ignore_index=True)
 
 
 def run_prescreen(
     max_cap=DEFAULT_MAX_CAP,
+    min_cap=DEFAULT_MIN_CAP,
     min_revenue=DEFAULT_MIN_REVENUE,
     max_debt_eq=DEFAULT_MAX_DEBT_EQ,
     min_current=DEFAULT_MIN_CURRENT,
     max_net_loss=DEFAULT_MAX_NET_LOSS,
-    cutoff_years=DEFAULT_CUTOFF_YEARS,
+    years=None,
     limit=DEFAULT_LIMIT,
     verbose=False,
 ):
-    conn = _connect()
-    tables = list_tables(conn)
-    if verbose:
-        print(f"[qf2_prescreen] Tables: {tables}", file=sys.stderr)
+    import pandas as pd
 
-    cutoff_date = (date.today() - timedelta(days=365 * cutoff_years)).isoformat()
+    if years is None:
+        years = DEFAULT_YEARS
 
-    # -----------------------------------------------------------------------
-    # Build SQL: join key_metrics + income_statement for each ticker,
-    # take the most recent row per ticker, then apply filters.
-    # -----------------------------------------------------------------------
-    # Check which tables exist
-    has_km  = "bulk_key_metrics_annual_fmp"  in tables
-    has_inc = "bulk_income_statement_annual_fmp" in tables
-    has_bs  = "bulk_balance_sheet_statement_annual_fmp" in tables
-
-    if not has_km:
-        print(f"[ERROR] bulk_key_metrics_annual_fmp not in DB. Tables: {tables}", file=sys.stderr)
+    # ------------------------------------------------------------------
+    # Load key metrics Parquet files
+    # ------------------------------------------------------------------
+    km_pattern = FMP_CACHE + "/bulk-key-metrics_*_annual-*.parquet"
+    km = _load_parquet(km_pattern, verbose=verbose)
+    if km is None:
+        print(f"[ERROR] No key-metrics Parquet files found in {FMP_CACHE}", file=sys.stderr)
         sys.exit(1)
 
-    # Step 1: get latest key metrics per ticker
-    sql_km = f"""
-    WITH ranked_km AS (
-        SELECT
-            symbol,
-            date,
-            marketCap,
-            peRatio,
-            pbRatio,
-            evToEbitda,
-            currentRatio,
-            debtToEquity,
-            revenuePerShare,
-            netIncomePerShare,
-            roe,
-            roa,
-            roic,
-            dividendYield,
-            ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY date DESC) AS rn
-        FROM bulk_key_metrics_annual_fmp
-        WHERE date >= '{cutoff_date}'
-    )
-    SELECT * FROM ranked_km WHERE rn = 1
-    """
+    km["date"] = pd.to_datetime(km["date"], errors="coerce")
 
-    # Step 2 (optional): get latest revenue from income statement
-    sql_inc = ""
-    if has_inc:
-        sql_inc = f"""
-        WITH ranked_inc AS (
-            SELECT
-                symbol,
-                date,
-                revenue,
-                netIncome,
-                grossProfit,
-                operatingIncome,
-                ROW_NUMBER() OVER (PARTITION BY symbol ORDER BY date DESC) AS rn
-            FROM bulk_income_statement_annual_fmp
-            WHERE date >= '{cutoff_date}'
-        )
-        SELECT * FROM ranked_inc WHERE rn = 1
-        """
+    # Filter to requested years
+    km = km[km["date"].dt.year.isin(years)]
+    print(f"[qf2_prescreen] key_metrics rows (years {years}): {len(km):,}", file=sys.stderr)
 
-    try:
-        km_df  = conn.execute(sql_km).df()
-        print(f"[qf2_prescreen] key_metrics rows: {len(km_df)}", file=sys.stderr)
+    # Most recent row per ticker
+    km_latest = (km.sort_values("date", ascending=False)
+                   .drop_duplicates(subset="symbol", keep="first"))
+    print(f"[qf2_prescreen] Unique tickers: {len(km_latest):,}", file=sys.stderr)
 
-        if has_inc and sql_inc:
-            inc_df = conn.execute(sql_inc).df()
-            print(f"[qf2_prescreen] income_stmt rows: {len(inc_df)}", file=sys.stderr)
-            merged = km_df.merge(inc_df[['symbol','revenue','netIncome','grossProfit']], 
-                                  on='symbol', how='left')
-        else:
-            merged = km_df.copy()
-            merged['revenue']    = None
-            merged['netIncome']  = None
-            merged['grossProfit'] = None
+    # ------------------------------------------------------------------
+    # Load income statement for revenue / net income
+    # ------------------------------------------------------------------
+    inc_pattern = FMP_CACHE + "/bulk-income-statement_*_annual-*.parquet"
+    inc = _load_parquet(inc_pattern, verbose=verbose)
+    if inc is not None:
+        inc["date"] = pd.to_datetime(inc["date"], errors="coerce")
+        inc = inc[inc["date"].dt.year.isin(years)]
+        inc_latest = (inc.sort_values("date", ascending=False)
+                         .drop_duplicates(subset="symbol", keep="first"))
+        cols = [c for c in ["symbol", "revenue", "netIncome"] if c in inc_latest.columns]
+        km_latest = km_latest.merge(inc_latest[cols], on="symbol", how="left")
+        print(f"[qf2_prescreen] income_stmt merged for {inc_latest['symbol'].nunique():,} tickers", file=sys.stderr)
 
-    except Exception as e:
-        print(f"[ERROR] Query failed: {e}", file=sys.stderr)
-        sys.exit(1)
+    df = km_latest.copy()
+    total_start = len(df)
 
-    # -----------------------------------------------------------------------
-    # Apply filters in Python (easier than fighting DuckDB NULL semantics)
-    # -----------------------------------------------------------------------
-    df = merged.copy()
-    total_before = len(df)
+    # ------------------------------------------------------------------
+    # Apply filters
+    # ------------------------------------------------------------------
+    df = df[df["marketCap"].notna() & (df["marketCap"] > 0)]
+    print(f"[qf2_prescreen] After marketCap > 0:      {len(df):,} (from {total_start:,})", file=sys.stderr)
 
-    # Market cap filter: must be positive and < max_cap
-    has_mcap = df['marketCap'].notna() & (df['marketCap'] > 0)
-    df = df[has_mcap & (df['marketCap'] < max_cap)]
-    print(f"[qf2_prescreen] After mcap < ${max_cap/1e9:.1f}B: {len(df)} (was {total_before})", file=sys.stderr)
+    df = df[df["marketCap"] < max_cap]
+    print(f"[qf2_prescreen] After mcap < ${max_cap/1e9:.1f}B:     {len(df):,}", file=sys.stderr)
 
-    # Minimum revenue filter
-    if min_revenue > 0 and 'revenue' in df.columns:
-        before = len(df)
-        rev_ok = df['revenue'].isna() | (df['revenue'] >= min_revenue)
-        df = df[rev_ok]
-        print(f"[qf2_prescreen] After min revenue ${min_revenue/1e6:.1f}M: {len(df)} (was {before})", file=sys.stderr)
+    df = df[df["marketCap"] >= min_cap]
+    print(f"[qf2_prescreen] After mcap >= ${min_cap/1e6:.0f}M:    {len(df):,}", file=sys.stderr)
 
-    # Debt/equity filter  
-    if 'debtToEquity' in df.columns:
-        before = len(df)
-        de_ok = df['debtToEquity'].isna() | (df['debtToEquity'] <= max_debt_eq)
-        df = df[de_ok]
-        print(f"[qf2_prescreen] After D/E <= {max_debt_eq}: {len(df)} (was {before})", file=sys.stderr)
+    if min_revenue > 0 and "revenue" in df.columns:
+        df = df[df["revenue"].isna() | (df["revenue"] >= min_revenue)]
+        print(f"[qf2_prescreen] After revenue >= ${min_revenue/1e6:.1f}M: {len(df):,}", file=sys.stderr)
 
-    # Current ratio filter
-    if 'currentRatio' in df.columns:
-        before = len(df)
-        cr_ok = df['currentRatio'].isna() | (df['currentRatio'] >= min_current)
-        df = df[cr_ok]
-        print(f"[qf2_prescreen] After CR >= {min_current}: {len(df)} (was {before})", file=sys.stderr)
+    if "debtToEquity" in df.columns:
+        df = df[df["debtToEquity"].isna() | (df["debtToEquity"] <= max_debt_eq)]
+        print(f"[qf2_prescreen] After D/E <= {max_debt_eq}:        {len(df):,}", file=sys.stderr)
 
-    # Net margin floor (reject total zombies)
-    if 'revenue' in df.columns and 'netIncome' in df.columns:
-        before = len(df)
-        def net_margin_ok(row):
-            r, ni = row['revenue'], row['netIncome']
-            if r is None or r == 0 or ni is None:
-                return True  # can't compute, keep it
-            try:
-                nm = float(ni) / float(r)
-                return nm >= max_net_loss
-            except:
-                return True
-        margin_mask = df.apply(net_margin_ok, axis=1)
-        df = df[margin_mask]
-        print(f"[qf2_prescreen] After net margin >= {max_net_loss:.0%}: {len(df)} (was {before})", file=sys.stderr)
+    if "currentRatio" in df.columns:
+        df = df[df["currentRatio"].isna() | (df["currentRatio"] >= min_current)]
+        print(f"[qf2_prescreen] After CR >= {min_current}:           {len(df):,}", file=sys.stderr)
 
-    # -----------------------------------------------------------------------
-    # Sort by market cap ascending (smallest first = most micro-cap)
-    # -----------------------------------------------------------------------
-    df = df.sort_values('marketCap', ascending=True)
+    if "revenue" in df.columns and "netIncome" in df.columns:
+        def _margin_ok(row):
+            r, ni = row["revenue"], row["netIncome"]
+            if pd.isna(r) or r == 0 or pd.isna(ni): return True
+            try: return (float(ni) / float(r)) >= max_net_loss
+            except: return True
+        df = df[df.apply(_margin_ok, axis=1)]
+        print(f"[qf2_prescreen] After margin >= {max_net_loss:.0%}: {len(df):,}", file=sys.stderr)
+
+    # Sort smallest first
+    df = df.sort_values("marketCap", ascending=True)
 
     if limit > 0:
         df = df.head(limit)
-        print(f"[qf2_prescreen] Limited to top {limit} by smallest mcap", file=sys.stderr)
+        print(f"[qf2_prescreen] Limited to {limit}", file=sys.stderr)
 
-    tickers = df['symbol'].str.strip().str.upper().tolist()
-    print(f"[qf2_prescreen] Final universe: {len(tickers)} tickers", file=sys.stderr)
+    # Breakdown
+    buckets = [
+        ("Nano  (<$50M)",       0,     50e6),
+        ("Micro ($50M-$300M)",  50e6,  300e6),
+        ("Small ($300M-$2B)",   300e6, 2e9),
+    ]
+    for label, lo, hi in buckets:
+        n = len(df[(df["marketCap"] >= lo) & (df["marketCap"] < hi)])
+        print(f"[qf2_prescreen]   {label}: {n:,}", file=sys.stderr)
+
+    tickers = df["symbol"].str.strip().str.upper().tolist()
+    print(f"[qf2_prescreen] FINAL UNIVERSE: {len(tickers):,} tickers", file=sys.stderr)
     return tickers
 
 
 def main():
-    parser = argparse.ArgumentParser(description='QF2 small-cap pre-screener')
-    parser.add_argument('--out',          default=None,           help='Output file (default: stdout)')
-    parser.add_argument('--max-cap',      type=float, default=DEFAULT_MAX_CAP,     help='Max market cap (default 2e9)')
-    parser.add_argument('--min-revenue',  type=float, default=DEFAULT_MIN_REVENUE, help='Min revenue (default 500000)')
-    parser.add_argument('--max-debt-eq',  type=float, default=DEFAULT_MAX_DEBT_EQ, help='Max debt/equity (default 10)')
-    parser.add_argument('--min-current',  type=float, default=DEFAULT_MIN_CURRENT, help='Min current ratio (default 0.3)')
-    parser.add_argument('--max-net-loss', type=float, default=DEFAULT_MAX_NET_LOSS,help='Min net margin (default -1.0)')
-    parser.add_argument('--cutoff-years', type=int,   default=DEFAULT_CUTOFF_YEARS,help='Max data age in years (default 3)')
-    parser.add_argument('--limit',        type=int,   default=DEFAULT_LIMIT,       help='Max tickers to output (0=all)')
-    parser.add_argument('--verbose', '-v', action='store_true')
-    parser.add_argument('--json',    '-j', action='store_true', help='Output JSON array instead of newline-separated')
+    parser = argparse.ArgumentParser(description="QF2 small-cap pre-screener (Parquet source)")
+    parser.add_argument("--out",          default=None)
+    parser.add_argument("--max-cap",      type=float, default=DEFAULT_MAX_CAP)
+    parser.add_argument("--min-cap",      type=float, default=DEFAULT_MIN_CAP)
+    parser.add_argument("--min-revenue",  type=float, default=DEFAULT_MIN_REVENUE)
+    parser.add_argument("--max-debt-eq",  type=float, default=DEFAULT_MAX_DEBT_EQ)
+    parser.add_argument("--min-current",  type=float, default=DEFAULT_MIN_CURRENT)
+    parser.add_argument("--max-net-loss", type=float, default=DEFAULT_MAX_NET_LOSS)
+    parser.add_argument("--limit",        type=int,   default=DEFAULT_LIMIT)
+    parser.add_argument("--verbose", "-v", action="store_true")
+    parser.add_argument("--json",    "-j", action="store_true")
     args = parser.parse_args()
 
     tickers = run_prescreen(
         max_cap      = args.max_cap,
+        min_cap      = args.min_cap,
         min_revenue  = args.min_revenue,
         max_debt_eq  = args.max_debt_eq,
         min_current  = args.min_current,
         max_net_loss = args.max_net_loss,
-        cutoff_years = args.cutoff_years,
         limit        = args.limit,
         verbose      = args.verbose,
     )
 
-    if args.json:
-        output = json.dumps(tickers)
-    else:
-        output = '\n'.join(tickers)
+    output = json.dumps(tickers) if args.json else "\n".join(tickers)
 
     if args.out:
-        with open(args.out, 'w') as f:
-            f.write(output + '\n')
+        with open(args.out, "w") as f:
+            f.write(output + "\n")
         print(f"[qf2_prescreen] Written to {args.out}", file=sys.stderr)
     else:
         print(output)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
