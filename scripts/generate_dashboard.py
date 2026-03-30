@@ -1,6 +1,6 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
-generate_dashboard.py  —  valuefund.substack.com
+generate_dashboard.py  ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â  valuefund.substack.com
 Rich GuruFocus-style HTML dashboard with clickable ticker modals.
 Reads from stocks.db; call generate_html_index() or run standalone.
 """
@@ -12,7 +12,7 @@ DB_PATH   = os.path.join(BASE_DIR, "database", "stocks.db")
 HTML_PATH = os.path.join(BASE_DIR, "database", "index.html")
 BRAND     = "valuefund.substack.com"
 
-# ── Industry-Specific Valuation (academic-backed) ─────────────────────────────
+# ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Industry-Specific Valuation (academic-backed) ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
 def industry_valuation_summary(row_dict):
     """
     Returns (method_name, fair_value_str, key_ratios_html, academic_note)
@@ -44,7 +44,7 @@ def industry_valuation_summary(row_dict):
     is_re   = any(w in industry for w in ('real estate','reit','property'))
     is_cons = 'consumer' in sector
 
-    # ── BANKS: Fama-French (1992) — P/B driven by ROE vs cost of equity ──────
+    # ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ BANKS: Fama-French (1992) ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â P/B driven by ROE vs cost of equity ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
     if is_bank:
         req = 0.09
         fair_pb  = (roe / req) if (roe and roe > 0) else None
@@ -56,12 +56,12 @@ def industry_valuation_summary(row_dict):
         return ('P/B Fair Value',
                 f'${fair_val:.2f} ({upside})' if fair_val else 'N/A',
                 ratios,
-                'Fama & French (1992): P/B most predictive for financials. Fair P/B = ROE ÷ Cost of Equity (9%).')
+                'Fama & French (1992): P/B most predictive for financials. Fair P/B = ROE ÃƒÆ’Ã‚Â· Cost of Equity (9%).')
 
-    # ── TECH: Novy-Marx (2013) gross profit/assets + EV/Revenue ──────────────
+    # ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ TECH: Novy-Marx (2013) gross profit/assets + EV/Revenue ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
     if is_tech:
         rule40 = ((rg or 0)*100 + (gm or 0)*100) if (rg or gm) else None
-        # Cheap tech: EV/Revenue < 1.5x with >40% gross margin → target 2.5x
+        # Cheap tech: EV/Revenue < 1.5x with >40% gross margin ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ target 2.5x
         fair_val = (price * 2.5 / ev_r) if (ev_r and ev_r > 0 and gm and gm > 0.35 and price) else None
         upside   = f'{(fair_val/price-1)*100:+.0f}%' if (fair_val and price) else 'N/A'
         ratios   = (f'EV/Rev: <b>{f(ev_r)}x</b> | P/S: <b>{f(ps)}x</b> | '
@@ -71,7 +71,7 @@ def industry_valuation_summary(row_dict):
                 ratios,
                 'Novy-Marx (2013): Gross profit/assets best quality predictor. Rule of 40 (rev growth% + FCF margin%) > 40 = healthy.')
 
-    # ── INDUSTRIALS: Gray & Carlisle (2012) EV/EBITDA ────────────────────────
+    # ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ INDUSTRIALS: Gray & Carlisle (2012) EV/EBITDA ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
     if is_ind:
         target_ev = 8.0
         fair_val  = (price * target_ev / ev_e) if (ev_e and ev_e > 0 and price) else None
@@ -84,9 +84,9 @@ def industry_valuation_summary(row_dict):
                 ratios,
                 "Gray & Carlisle 'Deep Value' (2012): EV/EBITDA most predictive for industrials vs private-market comps (8-10x).")
 
-    # ── HEALTHCARE/BIOTECH: P/S relative to growth ────────────────────────────
+    # ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ HEALTHCARE/BIOTECH: P/S relative to growth ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
     if is_hlth:
-        # If P/S < 1x and growing → target 2x P/S
+        # If P/S < 1x and growing ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ target 2x P/S
         fair_val = (price * 2.0 / ps) if (ps and ps > 0 and ps < 2 and rg and rg > 0.05 and price) else None
         upside   = f'{(fair_val/price-1)*100:+.0f}%' if (fair_val and price) else 'N/A'
         ratios   = (f'P/S: <b>{f(ps)}x</b> | P/E: <b>{f(pe)}x</b> | '
@@ -96,7 +96,7 @@ def industry_valuation_summary(row_dict):
                 ratios,
                 'Damodaran: P/S relative to growth rate for pre-profit healthcare. PEG ratio for profitable biopharma.')
 
-    # ── REAL ESTATE / REIT ────────────────────────────────────────────────────
+    # ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ REAL ESTATE / REIT ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
     if is_re:
         ratios = f'P/B: <b>{f(pb)}x</b> | BVPS: <b>${f(bvps)}</b> | FCF Yield: <b>{fp(fcf_y)}</b>'
         return ('P/B NAV Discount (REIT)',
@@ -104,7 +104,7 @@ def industry_valuation_summary(row_dict):
                 ratios,
                 'Clayton & MacKinnon (2001): REIT P/B predicts returns; discount to NAV = alpha opportunity.')
 
-    # ── CONSUMER: Basu (1977) low P/E + EV/EBITDA ────────────────────────────
+    # ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ CONSUMER: Basu (1977) low P/E + EV/EBITDA ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
     if is_cons:
         target_pe = 15.0
         fair_val  = (price * target_pe / pe) if (pe and pe > 0 and pe < 20 and price) else None
@@ -116,7 +116,7 @@ def industry_valuation_summary(row_dict):
                 ratios,
                 'Basu (1977): Low P/E predicts positive abnormal returns. Confirmed Fama-French (1992) value premium.')
 
-    # ── DEFAULT: Graham + DCF + Net-Net triangulation ────────────────────────
+    # ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ DEFAULT: Graham + DCF + Net-Net triangulation ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
     graham = row_dict.get('graham_number')
     dcf    = row_dict.get('dcf_value')
     nn     = row_dict.get('net_net_value')
@@ -131,7 +131,7 @@ def industry_valuation_summary(row_dict):
             "Graham & Dodd 'Security Analysis': Average of DCF, Graham Number, and Net-Net for conservative margin of safety.")
 
 
-# ── DB fetch ──────────────────────────────────────────────────────────────────
+# ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ DB fetch ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
 def fetch_all_stocks():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
@@ -143,14 +143,14 @@ def fetch_all_stocks():
     return rows
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
+# ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Helpers ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
 def _h(v, fmt='.2f'):
-    if v is None: return '<span class="na">—</span>'
+    if v is None: return '<span class="na">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span>'
     try: return f'{float(v):{fmt}}'
     except: return str(v)
 
 def _hp(v):
-    if v is None: return '<span class="na">—</span>'
+    if v is None: return '<span class="na">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span>'
     try:
         f = float(v)*100
         cls = 'pos' if f > 0 else 'neg'
@@ -158,14 +158,14 @@ def _hp(v):
     except: return str(v)
 
 def _hprice(v):
-    if v is None: return '<span class="na">—</span>'
+    if v is None: return '<span class="na">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span>'
     try:
         f = float(v)
         return f'${f:.4f}' if f < 1 else f'${f:.2f}'
     except: return str(v)
 
 def _hmcap(v):
-    if v is None: return '<span class="na">—</span>'
+    if v is None: return '<span class="na">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span>'
     try:
         f = float(v)
         if f >= 1e9: return f'${f/1e9:.2f}B'
@@ -177,16 +177,16 @@ def _grade_class(g):
     return {'A':'ga','B':'gb','C':'gc','D':'gd','F':'gf'}.get(g or '','gf')
 
 def _pf_html(v):
-    if v is None: return '<span class="na">—</span>'
+    if v is None: return '<span class="na">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span>'
     try:
         n = float(v)
-        if n >= 7: return f'<span class="pos">{n:.0f}/9 ✦</span>'
-        if n >= 5: return f'<span class="ye">{n:.0f}/9 ◆</span>'
-        return f'<span class="neg">{n:.0f}/9 ✗</span>'
+        if n >= 7: return f'<span class="pos">{n:.0f}/9 ÃƒÂ¢Ã…â€œÃ‚Â¦</span>'
+        if n >= 5: return f'<span class="ye">{n:.0f}/9 ÃƒÂ¢Ã¢â‚¬â€Ã¢â‚¬Â </span>'
+        return f'<span class="neg">{n:.0f}/9 ÃƒÂ¢Ã…â€œÃ¢â‚¬â€</span>'
     except: return str(v)
 
 def _az_html(v):
-    if v is None: return '<span class="na">—</span>'
+    if v is None: return '<span class="na">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span>'
     try:
         n = float(v)
         if n > 2.99: return f'<span class="pos">{n:.2f} Safe</span>'
@@ -195,7 +195,7 @@ def _az_html(v):
     except: return str(v)
 
 def _mos_html(v):
-    if v is None: return '<span class="na">—</span>'
+    if v is None: return '<span class="na">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span>'
     try:
         f = float(v)
         cls = 'pos' if f > 10 else ('neg' if f < -10 else 'ye')
@@ -218,10 +218,10 @@ def cat_badges(cj, hvj, limit=3):
         t  = (x.get('type','') if isinstance(x,dict) else str(x))[:22]
         dv = (x.get('detail','') if isinstance(x,dict) else '')[:80]
         out += f'<span class="cb hv" title="{dv}">{t}</span>'
-    return out or '<span class="na">—</span>'
+    return out or '<span class="na">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span>'
 
 
-# ── Per-stock JSON for modal ──────────────────────────────────────────────────
+# ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Per-stock JSON for modal ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
 def row_to_json(row):
     """Serialise one DB row to a JSON-safe dict for the JS modal."""
     def safe(v):
@@ -289,13 +289,14 @@ def row_to_json(row):
             'detail': (x.get('detail','') if isinstance(x,dict) else ''),
         } for x in hvs],
         'report_path':  row.get('report_path','') or '',
+        'avg_vol':      safe(row.get('avg_volume')),
         'notes':        row.get('notes','') or '',
         'short_thesis': row.get('short_thesis','') or '',
         'detailed_thesis': row.get('detailed_thesis','') or '',
     }
 
 
-# ── Main HTML generator ───────────────────────────────────────────────────────
+# ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Main HTML generator ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
 def generate_html_index():
     rows  = fetch_all_stocks()
     total = len(rows)
@@ -308,7 +309,7 @@ def generate_html_index():
     all_json = {}
     for i, row in enumerate(rows, 1):
         tk    = row.get('ticker','')
-        nm    = row.get('company_name','') or '—'
+        nm    = row.get('company_name','') or 'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â'
         ex    = row.get('exchange','?')
         mc    = row.get('market_cap')
         pr    = row.get('current_price')
@@ -332,10 +333,10 @@ def generate_html_index():
         action = row.get('action') or ({'A':'BUY','B':'WATCH'}.get(grade,'PASS'))
         act_cls = 'act-buy' if action=='BUY' else ('act-watch' if action=='WATCH' else 'act-pass')
         action_cell = f'<span class="act {act_cls}">{action}</span>'
-        rlink = '<span class="na">—</span>'
+        rlink = '<span class="na">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span>'
         if rpath and os.path.exists(rpath):
             uri   = 'file:///' + rpath.replace('\\','/')
-            rlink = f'<a href="{uri}" class="rlink" target="_blank">📄</a>'
+            rlink = f'<a href="{uri}" class="rlink" target="_blank">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬Å¾</a>'
 
         # Store JSON for modal
         all_json[tk] = row_to_json(row)
@@ -350,11 +351,11 @@ def generate_html_index():
     <td class="mc">{_hmcap(mc)}</td>
     <td>{_hprice(pr)}</td>
     <td>{_mos_html(mos)}</td>
-    <td>{'<span class="na">—</span>' if pe is None else f'{pe:.1f}x'}</td>
-    <td>{'<span class="na">—</span>' if pb is None else f'{pb:.2f}x'}</td>
+    <td>{'<span class="na">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span>' if pe is None else f'{pe:.1f}x'}</td>
+    <td>{'<span class="na">ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â</span>' if pb is None else f'{pb:.2f}x'}</td>
     <td>{_pf_html(pf)}</td>
     <td>{_az_html(az)}</td>
-    <td>{'—' if bc is None else f'{bc:.0f}/14'}</td>
+    <td>{'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â' if bc is None else f'{bc:.0f}/14'}</td>
     <td class="catcell">{cat_badges(cj, hvj)}</td>
     <td>
       <div class="bar"><div class="fill {'fill-high' if sc>=65 else 'fill-mid' if sc>=40 else 'fill-low'}" style="width:{sc}%"></div>
@@ -371,7 +372,7 @@ def generate_html_index():
     html = f'''<!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="UTF-8"><meta http-equiv="refresh" content="60">
-<title>{BRAND} — Deep-Value Screener</title>
+<title>{BRAND} ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Deep-Value Screener</title>
 <style>
 :root{{--bg:#080f1c;--bg2:#0f1c2e;--bg3:#152236;--bd:#1c3050;
       --tx:#d0e4f4;--mu:#4a6a8a;--bl:#5aabf0;--gr:#43a047;
@@ -480,7 +481,7 @@ td{{padding:7px 6px;vertical-align:middle}}
 .gterm-why{{font-size:9px;color:var(--mu);margin-top:4px;font-style:italic}}
 @media(max-width:600px){{.glossary-body{{grid-template-columns:1fr}}}}
 .footer{{text-align:center;padding:18px;color:var(--mu);font-size:10px;border-top:1px solid var(--bd)}}
-/* ── MODAL ── */
+/* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ MODAL ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
 #overlay{{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;
           backdrop-filter:blur(4px)}}
 #modal{{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
@@ -574,7 +575,7 @@ tr{{transition:background .12s}}
 .fill-high{{background:linear-gradient(90deg,#1a4020,var(--gr))!important}}
 .fill-mid{{background:linear-gradient(90deg,#1a2030,var(--bl))!important}}
 .fill-low{{background:linear-gradient(90deg,#2a1010,#e65100)!important}}
-/* ── Search / Filter / Sort bar ── */
+/* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Search / Filter / Sort bar ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
 .toolbar{{background:var(--bg2);border-bottom:1px solid var(--bd);padding:8px 28px;
           display:flex;gap:10px;flex-wrap:wrap;align-items:center}}
 .srch{{background:#0a1828;border:1px solid var(--bd);color:var(--tx);padding:6px 10px;
@@ -605,9 +606,9 @@ tr{{transition:background .12s}}
 /* Sort arrows on th */
 th.sortable{{cursor:pointer;user-select:none}}
 th.sortable:hover{{color:var(--bl)}}
-th.sortable::after{{content:' ⇅';font-size:8px;color:#2a4060;opacity:.6}}
-th.sort-asc::after{{content:' ↑';color:var(--bl);opacity:1}}
-th.sort-desc::after{{content:' ↓';color:var(--bl);opacity:1}}
+th.sortable::after{{content:' ÃƒÂ¢Ã¢â‚¬Â¡Ã¢â‚¬Â¦';font-size:8px;color:#2a4060;opacity:.6}}
+th.sort-asc::after{{content:' ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Ëœ';color:var(--bl);opacity:1}}
+th.sort-desc::after{{content:' ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“';color:var(--bl);opacity:1}}
 /* Prev/next in modal */
 .mnav{{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.5);
        border:1px solid var(--bd);color:var(--mu);font-size:20px;width:36px;height:60px;
@@ -622,7 +623,7 @@ th.sort-desc::after{{content:' ↓';color:var(--bl);opacity:1}}
   <div>
     <h1>Deep-Value Micro-Cap Screener</h1>
     <div class="brand">{BRAND}</div>
-    <div class="sub">Piotroski · Altman Z · Magic Formula · Buffett Checklist · Industry Valuation · Catalyst Detection</div>
+    <div class="sub">Piotroski Ãƒâ€šÃ‚Â· Altman Z Ãƒâ€šÃ‚Â· Magic Formula Ãƒâ€šÃ‚Â· Buffett Checklist Ãƒâ€šÃ‚Â· Industry Valuation Ãƒâ€šÃ‚Â· Catalyst Detection</div>
   </div>
   <div class="upd">Updated: {now}<br><small>Auto-refreshes every 60s | Click any ticker for full analysis</small></div>
 </div>
@@ -638,12 +639,12 @@ th.sort-desc::after{{content:' ↓';color:var(--bl);opacity:1}}
     <div id="gbar-wrap" class="gbar" style="width:120px;margin-top:6px"><div class="gbar-seg" id="gb-seg-A" style="background:#2e7d32;width:0%"></div><div class="gbar-seg" id="gb-seg-B" style="background:#f9a825;width:0%"></div><div class="gbar-seg" id="gb-seg-C" style="background:#e65100;width:0%"></div><div class="gbar-seg" id="gb-seg-DF" style="background:#b71c1c;width:0%"></div></div>
   </div>
   <div class="st" style="margin-left:auto">
-    <button class="glossary-btn" onclick="document.getElementById('glossary').style.display='block'">📖 Metric Guide</button>
+    <button class="glossary-btn" onclick="document.getElementById('glossary').style.display='block'">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬â€œ Metric Guide</button>
   </div>
 </div>
 
 <div class="toolbar" id="toolbar">
-  <input class="srch" id="srch" type="text" placeholder="🔍  Search ticker / company..." oninput="applyFilters()" autocomplete="off">
+  <input class="srch" id="srch" type="text" placeholder="ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â  Search ticker / company..." oninput="applyFilters()" autocomplete="off">
   <select class="flt-sel" id="flt-sector" onchange="applyFilters()"><option value="">All Sectors</option></select>
   <select class="flt-sel" id="flt-exch" onchange="applyFilters()"><option value="">All Exchanges</option></select>
   <span style="font-size:10px;color:var(--mu)">Min score:</span>
@@ -660,24 +661,25 @@ th.sort-desc::after{{content:' ↓';color:var(--bl);opacity:1}}
   <button class="grade-btn" id="ab-BUY" onclick="setAction('BUY')" style="border-color:#2e7d32">BUY</button>
   <button class="grade-btn" id="ab-WATCH" onclick="setAction('WATCH')" style="border-color:#f9a825">WATCH</button>
   <button class="grade-btn" id="ab-PASS" onclick="setAction('PASS')" style="border-color:#4a6a8a">PASS</button>
-  <button class="grade-btn gball" id="ab-ALL" onclick="setAction('ALL')">▪ Reset</button>
+  <button class="grade-btn gball" id="ab-ALL" onclick="setAction('ALL')">ÃƒÂ¢Ã¢â‚¬â€œÃ‚Âª Reset</button>
+  <label style="font-size:10px;color:var(--mu);display:flex;align-items:center;gap:4px;cursor:pointer;user-select:none"><input type="checkbox" id="flt-liq" onchange="applyFilters()" style="cursor:pointer"> Min $10K/mo vol</label>
   <span id="row-count" class="row-count">Showing all</span>
-  <button class="exp-btn" onclick="exportCSV()">⬇ CSV</button>
+  <button class="exp-btn" onclick="exportCSV()">ÃƒÂ¢Ã‚Â¬Ã¢â‚¬Â¡ CSV</button>
 </div>
 <div class="quote">
   "It is far better to buy a wonderful company at a fair price than a fair company at a wonderful price." &#8212; Warren Buffett
-  &nbsp;&nbsp;|&nbsp;&nbsp; <span style="color:var(--te)">&#9888; Click any ticker for the full analysis · Use ← → arrows to navigate stocks in modal</span>
+  &nbsp;&nbsp;|&nbsp;&nbsp; <span style="color:var(--te)">&#9888; Click any ticker for the full analysis Ãƒâ€šÃ‚Â· Use ÃƒÂ¢Ã¢â‚¬Â Ã‚Â ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ arrows to navigate stocks in modal</span>
 </div>
 
 <div class="wrap">
   <div class="leg">
-    <span style="color:#2e7d32">■</span> A–Buy &nbsp;
-    <span style="color:#f9a825">■</span> B–Watch &nbsp;
-    <span style="color:#e65100">■</span> C–Neutral &nbsp;
-    <span style="color:#b71c1c">■</span> D/F–Avoid &nbsp;&nbsp;
-    <span style="color:var(--te)">■</span> Catalyst &nbsp;
-    <span style="color:var(--pu)">■</span> Hidden Value &nbsp;&nbsp;
-    <span style="color:var(--mu)">Piotroski: 7-9=✦ strong | Altman Z: green=safe red=distress | MoS=Margin of Safety | P/B=Price/Book</span>
+    <span style="color:#2e7d32">ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â </span> AÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“Buy &nbsp;
+    <span style="color:#f9a825">ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â </span> BÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“Watch &nbsp;
+    <span style="color:#e65100">ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â </span> CÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“Neutral &nbsp;
+    <span style="color:#b71c1c">ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â </span> D/FÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“Avoid &nbsp;&nbsp;
+    <span style="color:var(--te)">ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â </span> Catalyst &nbsp;
+    <span style="color:var(--pu)">ÃƒÂ¢Ã¢â‚¬â€œÃ‚Â </span> Hidden Value &nbsp;&nbsp;
+    <span style="color:var(--mu)">Piotroski: 7-9=ÃƒÂ¢Ã…â€œÃ‚Â¦ strong | Altman Z: green=safe red=distress | MoS=Margin of Safety | P/B=Price/Book</span>
   </div>
   <table>
     <thead><tr>
@@ -704,7 +706,7 @@ th.sort-desc::after{{content:' ↓';color:var(--bl);opacity:1}}
 </div>
 
 <div class="footer">
-  <p><strong>{BRAND}</strong> — Systematic deep-value analysis of micro/nano-cap stocks on obscure exchanges</p>
+  <p><strong>{BRAND}</strong> ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Systematic deep-value analysis of micro/nano-cap stocks on obscure exchanges</p>
   <p style="margin-top:5px">NOT financial advice. Always conduct independent due diligence before investing.</p>
 </div>
 
@@ -715,10 +717,10 @@ th.sort-desc::after{{content:' ↓';color:var(--bl);opacity:1}}
 <script>
 const STOCKS = {json_blob};
 
-function pct(v) {{ return v != null ? (v*100).toFixed(1)+'%' : '—'; }}
-function num(v,d=2) {{ return v != null ? v.toFixed(d) : '—'; }}
-function price(v) {{ if(v==null)return'—'; return v<1 ? '$'+v.toFixed(4) : '$'+v.toFixed(2); }}
-function mcap(v) {{ if(v==null)return'—'; if(v>=1e9)return'$'+(v/1e9).toFixed(2)+'B'; if(v>=1e6)return'$'+(v/1e6).toFixed(1)+'M'; return'$'+v.toFixed(0); }}
+function pct(v) {{ return v != null ? (v*100).toFixed(1)+'%' : 'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â'; }}
+function num(v,d=2) {{ return v != null ? v.toFixed(d) : 'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â'; }}
+function price(v) {{ if(v==null)return'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â'; return v<1 ? '$'+v.toFixed(4) : '$'+v.toFixed(2); }}
+function mcap(v) {{ if(v==null)return'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â'; if(v>=1e9)return'$'+(v/1e9).toFixed(2)+'B'; if(v>=1e6)return'$'+(v/1e6).toFixed(1)+'M'; return'$'+v.toFixed(0); }}
 function clsNum(v,lo,hi) {{ if(v==null)return''; return v>=hi?'pos':v>=lo?'ye':'neg'; }}
 function grClass(g) {{ return {{A:'ga',B:'gb',C:'gc',D:'gd',F:'gf'}}[g]||'gf'; }}
 function mos_cls(v) {{ if(v==null)return''; return v>10?'pos':v<-10?'neg':'ye'; }}
@@ -733,21 +735,21 @@ function pfSignals(d) {{
   const sigMap = {{
     'F1:ROA>0':'F1: ROA > 0','F1:ROA<0':'F1: ROA < 0',
     'F2:OCF>0':'F2: OCF > 0','F2:OCF<0':'F2: OCF < 0',
-    'F3:ROA↑':'F3: ROA ↑','F3:ROA↓':'F3: ROA ↓',
+    'F3:ROAÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Ëœ':'F3: ROA ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Ëœ','F3:ROAÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“':'F3: ROA ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“',
     'F4:CashEarnings>Book':'F4: Cash > Accrual','F4:Accrual-heavy':'F4: Accrual-heavy',
-    'F5:Leverage↓':'F5: Leverage ↓','F5:Leverage↑':'F5: Leverage ↑',
-    'F6:Liquidity↑':'F6: Liquidity ↑','F6:Liquidity↓':'F6: Liquidity ↓',
+    'F5:LeverageÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“':'F5: Leverage ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“','F5:LeverageÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Ëœ':'F5: Leverage ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Ëœ',
+    'F6:LiquidityÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Ëœ':'F6: Liquidity ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Ëœ','F6:LiquidityÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“':'F6: Liquidity ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“',
     'F7:NoDilution':'F7: No Dilution','F7:NoDilution(assumed)':'F7: No Dilution',
-    'F8:GM↑':'F8: Gross Margin ↑','F8:GM↓':'F8: Gross Margin ↓',
-    'F9:AssetTurn↑':'F9: Asset Turnover ↑','F9:AssetTurn↓':'F9: Asset Turnover ↓',
+    'F8:GMÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Ëœ':'F8: Gross Margin ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Ëœ','F8:GMÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“':'F8: Gross Margin ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“',
+    'F9:AssetTurnÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Ëœ':'F9: Asset Turnover ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Ëœ','F9:AssetTurnÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“':'F9: Asset Turnover ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Å“',
   }};
-  const label = pf>=7?'✦ STRONG':pf>=5?'◆ DECENT':pf>=3?'◇ WEAK':'✗ POOR';
+  const label = pf>=7?'ÃƒÂ¢Ã…â€œÃ‚Â¦ STRONG':pf>=5?'ÃƒÂ¢Ã¢â‚¬â€Ã¢â‚¬Â  DECENT':pf>=3?'ÃƒÂ¢Ã¢â‚¬â€Ã¢â‚¬Â¡ WEAK':'ÃƒÂ¢Ã…â€œÃ¢â‚¬â€ POOR';
   const score_cls = pf>=7?'pos':pf>=5?'ye':'neg';
   return `<div style="margin-bottom:6px"><span class="${{score_cls}}" style="font-size:13px;font-weight:700">${{pf}}/9 ${{label}}</span><span style="color:#4a6a8a;font-size:10px"> (Piotroski 2000)</span></div>
 <div class="pf-grid">${{['F1','F2','F3','F4','F5','F6','F7','F8','F9'].map((f,i)=>{{
-  const passKey = Object.keys(sigMap).find(k=>k.startsWith(f)&&(k.includes('↑')||k.includes('>0')||k.includes('No')||k.includes('Cash')));
+  const passKey = Object.keys(sigMap).find(k=>k.startsWith(f)&&(k.includes('ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬Ëœ')||k.includes('>0')||k.includes('No')||k.includes('Cash')));
   const pass = (i+1 <= pf);
-  return `<div class="pfsig ${{pass?'pass':'fail'}}">${{pass?'✓':'✗'}} ${{sigMap[passKey]||f}}</div>`;
+  return `<div class="pfsig ${{pass?'pass':'fail'}}">${{pass?'ÃƒÂ¢Ã…â€œÃ¢â‚¬Å“':'ÃƒÂ¢Ã…â€œÃ¢â‚¬â€'}} ${{sigMap[passKey]||f}}</div>`;
 }}).join('')}}</div>`;
 }}
 
@@ -766,12 +768,12 @@ function buffettTable(d) {{
   ];
   const score = d.buffett != null ? d.buffett : items.filter(x=>x[2]).length;
   return `<div style="margin-bottom:8px;font-size:12px">Score: <span class="${{score>=10?'pos':score>=7?'ye':'neg'}}" style="font-weight:700">${{num(score,0)}}/14</span></div>
-<div class="chk-grid">${{items.map(([k,label,pass])=>`<div class="chk ${{pass?'pass':'fail'}}"><span class="chk-ico">${{pass?'✅':'❌'}}</span><span>${{label}}</span></div>`).join('')}}</div>`;
+<div class="chk-grid">${{items.map(([k,label,pass])=>`<div class="chk ${{pass?'pass':'fail'}}"><span class="chk-ico">${{pass?'ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¦':'ÃƒÂ¢Ã‚ÂÃ…â€™'}}</span><span>${{label}}</span></div>`).join('')}}</div>`;
 }}
 
 function _renderModal(ticker, d) {{
   const gc = grClass(d.grade);
-  const mosV = d.mos!=null ? d.mos.toFixed(1)+'%' : '—';
+  const mosV = d.mos!=null ? d.mos.toFixed(1)+'%' : 'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â';
   const mosCls = mos_cls(d.mos);
 
   // Build catalysts HTML
@@ -788,26 +790,26 @@ function _renderModal(ticker, d) {{
       <div class="hv-detail">${{h.detail}}</div>
     </div>`).join('') : '<span style="color:#4a6a8a;font-size:11px">No hidden value signals detected.</span>';
 
-  const rlink = d.report_path ? `<a href="file:///${{d.report_path.replace(/\\\\/g,'/')}}" target="_blank" style="color:var(--te);font-size:11px">📄 View Report</a>` : '';
+  const rlink = d.report_path ? `<a href="file:///${{d.report_path.replace(/\\\\/g,'/')}}" target="_blank" style="color:var(--te);font-size:11px">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬Å¾ View Report</a>` : '';
   const docxPath = d.report_path ? d.report_path.replace('.md','.docx').replace('.txt','.docx') : '';
-  const dlnkModal = docxPath ? `<a href="file:///${{docxPath.replace(/\\\\/g,'/')}}" target="_blank" style="color:#80d8a0;font-size:11px">📝 Download DOCX</a>` : '';
+  const dlnkModal = docxPath ? `<a href="file:///${{docxPath.replace(/\\\\/g,'/')}}" target="_blank" style="color:#80d8a0;font-size:11px">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â Download DOCX</a>` : '';
 
   const html = `
 <div class="mhdr">
-  <button class="mnav" id="mnav-prev" onclick="navModal(-1)" title="Previous stock (←)">&#8249;</button>
-  <button class="mnav" id="mnav-next" onclick="navModal(+1)" title="Next stock (→)">&#8250;</button>
+  <button class="mnav" id="mnav-prev" onclick="navModal(-1)" title="Previous stock (ÃƒÂ¢Ã¢â‚¬Â Ã‚Â)">&#8249;</button>
+  <button class="mnav" id="mnav-next" onclick="navModal(+1)" title="Next stock (ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢)">&#8250;</button>
   <div class="mhdr-top">
     <div>
       <div class="mcompany">${{d.name}}</div>
-      <div class="mticker">${{d.ticker}} &nbsp;·&nbsp; ${{d.exchange}} &nbsp;·&nbsp; ${{d.sector}}</div>
+      <div class="mticker">${{d.ticker}} &nbsp;Ãƒâ€šÃ‚Â·&nbsp; ${{d.exchange}} &nbsp;Ãƒâ€šÃ‚Â·&nbsp; ${{d.sector}}</div>
     </div>
-    <button class="mclose" onclick="closeDetail()">✕</button>
+    <button class="mclose" onclick="closeDetail()">ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¢</button>
   </div>
   <div class="mbadges">
     <span class="mbadge ex">${{d.exchange}}</span>
     <span class="mbadge ex">${{d.sector}}</span>
     <span class="mbadge sc">Score: ${{d.score!=null?d.score.toFixed(0):'?'}}</span>
-    <span class="mbadge ${{gc}}">${{d.grade}} — ${{{{A:'Strong Buy',B:'Watch',C:'Neutral',D:'Avoid',F:'Avoid'}}[d.grade]||'?'}}</span>
+    <span class="mbadge ${{gc}}">${{d.grade}} ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â ${{{{A:'Strong Buy',B:'Watch',C:'Neutral',D:'Avoid',F:'Avoid'}}[d.grade]||'?'}}</span>
     <span style="color:#4a6a8a;font-size:10px">Analyzed: ${{d.date}}</span>
     ${{rlink}}
     ${{dlnkModal}}
@@ -825,13 +827,13 @@ function _renderModal(ticker, d) {{
     <div><div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:2px">MoS %</div>
       <div style="font-size:16px;font-weight:700" class="${{mosCls}}">${{mosV}}</div></div>
     <div><div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:2px">P/E</div>
-      <div style="font-size:16px;font-weight:700;color:var(--tx)">${{d.pe!=null?d.pe.toFixed(1)+'x':'—'}}</div></div>
+      <div style="font-size:16px;font-weight:700;color:var(--tx)">${{d.pe!=null?d.pe.toFixed(1)+'x':'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â'}}</div></div>
     <div><div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:2px">P/B</div>
-      <div style="font-size:16px;font-weight:700;color:var(--tx)">${{d.pb!=null?d.pb.toFixed(2)+'x':'—'}}</div></div>
+      <div style="font-size:16px;font-weight:700;color:var(--tx)">${{d.pb!=null?d.pb.toFixed(2)+'x':'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â'}}</div></div>
     <div><div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:2px">P/S</div>
-      <div style="font-size:16px;font-weight:700;color:var(--tx)">${{d.ps!=null?d.ps.toFixed(2)+'x':'—'}}</div></div>
+      <div style="font-size:16px;font-weight:700;color:var(--tx)">${{d.ps!=null?d.ps.toFixed(2)+'x':'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â'}}</div></div>
     <div><div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:2px">Beta</div>
-      <div style="font-size:16px;font-weight:700;color:var(--tx)">${{d.beta!=null?d.beta.toFixed(2):'—'}}</div></div>
+      <div style="font-size:16px;font-weight:700;color:var(--tx)">${{d.beta!=null?d.beta.toFixed(2):'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â'}}</div></div>
   </div>
 
   <!-- Industry Valuation -->
@@ -840,43 +842,43 @@ function _renderModal(ticker, d) {{
     <div class="ivmethod">${{d.iv_method}}</div>
     <div class="ivratios">${{d.iv_ratios}}</div>
     <div class="ivfair">Fair Value Estimate: ${{d.iv_fair}}</div>
-    <div class="ivnote">📚 ${{d.iv_note}}</div>
+    <div class="ivnote">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã…Â¡ ${{d.iv_note}}</div>
   </div>
 
   <!-- 4-panel grid -->
   <div class="mgrid">
     <!-- Valuation Panel -->
     <div class="mpanel">
-      <h3>📊 Valuation Metrics</h3>
-      ${{metricRow('Graham Number', d.graham!=null?'$'+d.graham.toFixed(2):'—', d.graham&&d.price&&d.graham>d.price?'pos':'neg')}}
-      ${{metricRow('DCF Value', d.dcf!=null?'$'+d.dcf.toFixed(2):'—', d.dcf&&d.price&&d.dcf>d.price?'pos':'neg')}}
-      ${{metricRow('Net-Net Value', d.net_net!=null?'$'+d.net_net.toFixed(2):'—', d.net_net&&d.price&&d.net_net>d.price?'pos':'neg')}}
+      <h3>ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã…Â  Valuation Metrics</h3>
+      ${{metricRow('Graham Number', d.graham!=null?'$'+d.graham.toFixed(2):'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â', d.graham&&d.price&&d.graham>d.price?'pos':'neg')}}
+      ${{metricRow('DCF Value', d.dcf!=null?'$'+d.dcf.toFixed(2):'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â', d.dcf&&d.price&&d.dcf>d.price?'pos':'neg')}}
+      ${{metricRow('Net-Net Value', d.net_net!=null?'$'+d.net_net.toFixed(2):'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â', d.net_net&&d.price&&d.net_net>d.price?'pos':'neg')}}
       ${{metricRow('Margin of Safety', mosV, mosCls)}}
-      ${{metricRow('EV/EBITDA', d.ev_ebitda!=null?d.ev_ebitda.toFixed(1)+'x':'—', d.ev_ebitda&&d.ev_ebitda<8?'pos':d.ev_ebitda&&d.ev_ebitda>15?'neg':'')}}
-      ${{metricRow('EV/Revenue', d.ev_revenue!=null?d.ev_revenue.toFixed(2)+'x':'—')}}
-      ${{metricRow('FCF Yield', d.fcf_yield!=null?pct(d.fcf_yield):'—', d.fcf_yield&&d.fcf_yield>0.05?'pos':'')}}
-      ${{metricRow('Dividend Yield', d.div_yield!=null?pct(d.div_yield):'—')}}
+      ${{metricRow('EV/EBITDA', d.ev_ebitda!=null?d.ev_ebitda.toFixed(1)+'x':'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â', d.ev_ebitda&&d.ev_ebitda<8?'pos':d.ev_ebitda&&d.ev_ebitda>15?'neg':'')}}
+      ${{metricRow('EV/Revenue', d.ev_revenue!=null?d.ev_revenue.toFixed(2)+'x':'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â')}}
+      ${{metricRow('FCF Yield', d.fcf_yield!=null?pct(d.fcf_yield):'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â', d.fcf_yield&&d.fcf_yield>0.05?'pos':'')}}
+      ${{metricRow('Dividend Yield', d.div_yield!=null?pct(d.div_yield):'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â')}}
     </div>
 
     <!-- Quality Panel -->
     <div class="mpanel">
-      <h3>⚡ Quality Metrics</h3>
-      ${{metricRow('ROE', d.roe!=null?pct(d.roe):'—', d.roe&&d.roe>0.15?'pos':d.roe&&d.roe<0?'neg':'')}}
-      ${{metricRow('Gross Margin', d.gross_margin!=null?pct(d.gross_margin):'—', d.gross_margin&&d.gross_margin>0.30?'pos':'')}}
-      ${{metricRow('Revenue Growth', d.rev_growth!=null?pct(d.rev_growth):'—', d.rev_growth&&d.rev_growth>0.05?'pos':d.rev_growth&&d.rev_growth<0?'neg':'')}}
-      ${{metricRow('Magic Formula EY', d.magic_ey!=null?pct(d.magic_ey):'—', d.magic_ey&&d.magic_ey>0.10?'pos':'')}}
-      ${{metricRow('Insider Ownership', d.insider_pct!=null?pct(d.insider_pct):'—', d.insider_pct&&d.insider_pct>0.10?'pos':'')}}
-      ${{metricRow('Short Interest', d.short_int!=null?pct(d.short_int):'—')}}
-      ${{metricRow('52-Wk Position', d.w52!=null?(d.w52*100).toFixed(0)+'%':'—', d.w52!=null&&d.w52<0.20?'pos':d.w52&&d.w52>0.80?'neg':'')}}
-      ${{metricRow('Beta', d.beta!=null?d.beta.toFixed(2):'—')}}
+      <h3>ÃƒÂ¢Ã…Â¡Ã‚Â¡ Quality Metrics</h3>
+      ${{metricRow('ROE', d.roe!=null?pct(d.roe):'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â', d.roe&&d.roe>0.15?'pos':d.roe&&d.roe<0?'neg':'')}}
+      ${{metricRow('Gross Margin', d.gross_margin!=null?pct(d.gross_margin):'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â', d.gross_margin&&d.gross_margin>0.30?'pos':'')}}
+      ${{metricRow('Revenue Growth', d.rev_growth!=null?pct(d.rev_growth):'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â', d.rev_growth&&d.rev_growth>0.05?'pos':d.rev_growth&&d.rev_growth<0?'neg':'')}}
+      ${{metricRow('Magic Formula EY', d.magic_ey!=null?pct(d.magic_ey):'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â', d.magic_ey&&d.magic_ey>0.10?'pos':'')}}
+      ${{metricRow('Insider Ownership', d.insider_pct!=null?pct(d.insider_pct):'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â', d.insider_pct&&d.insider_pct>0.10?'pos':'')}}
+      ${{metricRow('Short Interest', d.short_int!=null?pct(d.short_int):'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â')}}
+      ${{metricRow('52-Wk Position', d.w52!=null?(d.w52*100).toFixed(0)+'%':'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â', d.w52!=null&&d.w52<0.20?'pos':d.w52&&d.w52>0.80?'neg':'')}}
+      ${{metricRow('Beta', d.beta!=null?d.beta.toFixed(2):'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â')}}
     </div>
 
     <!-- Safety Panel -->
     <div class="mpanel">
-      <h3>🛡 Financial Safety</h3>
-      ${{metricRow('Debt / Equity', d.debt_equity!=null?d.debt_equity.toFixed(2)+'x':'—', d.debt_equity!=null&&d.debt_equity<0.5?'pos':d.debt_equity&&d.debt_equity>2?'neg':'')}}
-      ${{metricRow('Current Ratio', d.current_ratio!=null?d.current_ratio.toFixed(2)+'x':'—', d.current_ratio&&d.current_ratio>2?'pos':d.current_ratio&&d.current_ratio<1?'neg':'')}}
-      ${{metricRow('Altman Z-Score', d.altman_z!=null?(d.altman_z>2.99?d.altman_z.toFixed(2)+' ✦ Safe':d.altman_z>1.81?d.altman_z.toFixed(2)+' ◇ Grey':d.altman_z.toFixed(2)+' ✗ Distress'):'—', d.altman_z!=null&&d.altman_z>2.99?'pos':d.altman_z!=null&&d.altman_z<1.81?'neg':'ye')}}
+      <h3>ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂºÃ‚Â¡ Financial Safety</h3>
+      ${{metricRow('Debt / Equity', d.debt_equity!=null?d.debt_equity.toFixed(2)+'x':'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â', d.debt_equity!=null&&d.debt_equity<0.5?'pos':d.debt_equity&&d.debt_equity>2?'neg':'')}}
+      ${{metricRow('Current Ratio', d.current_ratio!=null?d.current_ratio.toFixed(2)+'x':'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â', d.current_ratio&&d.current_ratio>2?'pos':d.current_ratio&&d.current_ratio<1?'neg':'')}}
+      ${{metricRow('Altman Z-Score', d.altman_z!=null?(d.altman_z>2.99?d.altman_z.toFixed(2)+' ÃƒÂ¢Ã…â€œÃ‚Â¦ Safe':d.altman_z>1.81?d.altman_z.toFixed(2)+' ÃƒÂ¢Ã¢â‚¬â€Ã¢â‚¬Â¡ Grey':d.altman_z.toFixed(2)+' ÃƒÂ¢Ã…â€œÃ¢â‚¬â€ Distress'):'ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â', d.altman_z!=null&&d.altman_z>2.99?'pos':d.altman_z!=null&&d.altman_z<1.81?'neg':'ye')}}
       <div style="margin-top:8px;border-top:1px solid var(--bd);padding-top:8px">
         <div style="font-size:9px;color:var(--mu);text-transform:uppercase;margin-bottom:6px;letter-spacing:.5px">Piotroski F-Score Detail</div>
         ${{pfSignals(d)}}
@@ -885,7 +887,7 @@ function _renderModal(ticker, d) {{
 
     <!-- Buffett Panel -->
     <div class="mpanel">
-      <h3>🎯 Buffett / Munger Checklist</h3>
+      <h3>ÃƒÂ°Ã…Â¸Ã…Â½Ã‚Â¯ Buffett / Munger Checklist</h3>
       ${{buffettTable(d)}}
     </div>
   </div>
@@ -908,13 +910,13 @@ function _renderModal(ticker, d) {{
       <span style="font-size:10px;color:var(--mu)">Buffett Score: <span style="color:var(--te);font-weight:600">${{d.buffett!=null?d.buffett.toFixed(0):0}}/14</span></span>
       <span style="font-size:10px;color:var(--mu)">Industry: <span style="color:#a0c4e4;font-weight:600">${{d.industry}}</span></span>
     </div>
-    ${{d.notes ? `<div style="margin-top:8px;font-size:10px;color:var(--mu);font-style:italic">📝 ${{d.notes}}</div>` : ''}}
+    ${{d.notes ? `<div style="margin-top:8px;font-size:10px;color:var(--mu);font-style:italic">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â ${{d.notes}}</div>` : ''}}
   </div>
 
   <!-- Investment Thesis -->
   ${{d.short_thesis || d.detailed_thesis ? `
   <div class="thesis-box">
-    <h3>💡 Investment Thesis</h3>
+    <h3>ÃƒÂ°Ã…Â¸Ã¢â‚¬â„¢Ã‚Â¡ Investment Thesis</h3>
     ${{d.short_thesis ? `<div class="thesis-short">${{d.short_thesis}}</div>` : ''}}
     ${{d.detailed_thesis ? `<div class="thesis-detail">${{d.detailed_thesis}}</div>` : ''}}
   </div>` : ''}}
@@ -922,11 +924,11 @@ function _renderModal(ticker, d) {{
   <!-- Catalysts -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
     <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:7px;padding:14px">
-      <h3 style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--te);margin-bottom:8px">📡 Catalysts Detected</h3>
+      <h3 style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--te);margin-bottom:8px">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã‚Â¡ Catalysts Detected</h3>
       <div class="cat-list">${{catsHtml}}</div>
     </div>
     <div style="background:var(--bg3);border:1px solid var(--bd);border-radius:7px;padding:14px">
-      <h3 style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--pu);margin-bottom:8px">💎 Hidden Value Signals</h3>
+      <h3 style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--pu);margin-bottom:8px">ÃƒÂ°Ã…Â¸Ã¢â‚¬â„¢Ã…Â½ Hidden Value Signals</h3>
       <div class="cat-list">${{hvHtml}}</div>
     </div>
   </div>
@@ -939,14 +941,14 @@ function _renderModal(ticker, d) {{
   document.body.style.overflow = 'hidden';
 }}
 
-// ── Global state ───────────────────────────────────────────────────────────
+// ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Global state ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
 let _sortCol = -1, _sortDir = 1;
 let _activeGrade = 'ALL', _activeAction = 'ALL';
 let _allTickers = Object.keys(STOCKS);
 let _visibleTickers = [..._allTickers];
 let _modalIdx = 0;
 
-// ── Populate filter dropdowns on load ────────────────────────────────────────
+// ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Populate filter dropdowns on load ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
 (function initFilters() {{
   const sectors = [...new Set(_allTickers.map(t=>STOCKS[t].sector||'Unknown').filter(Boolean))].sort();
   const exchs   = [...new Set(_allTickers.map(t=>STOCKS[t].exchange||'').filter(Boolean))].sort();
@@ -956,7 +958,7 @@ let _modalIdx = 0;
   if(se) exchs.forEach(e=>{{ const o=document.createElement('option'); o.value=o.textContent=e; se.appendChild(o); }});
 }})();
 
-// ── Grade filter buttons ──────────────────────────────────────────────────────
+// ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Grade filter buttons ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
 function setGrade(g) {{
   _activeGrade = g;
   ['ALL','A','B','C','D','F'].forEach(x=>{{
@@ -968,7 +970,7 @@ function setGrade(g) {{
   applyFilters();
 }}
 
-// ── Action filter (BUY/WATCH/PASS/ALL) ─────────────────────────────────────────
+// ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Action filter (BUY/WATCH/PASS/ALL) ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
 function filterAction(a) {{ setAction(a); }}
 function setAction(a) {{
   _activeAction = a;
@@ -979,12 +981,13 @@ function setAction(a) {{
   applyFilters();
 }}
 
-// ── Master filter function ────────────────────────────────────────────────────
+// ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Master filter function ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
 function applyFilters() {{
   const q      = (document.getElementById('srch')?.value||'').toLowerCase().trim();
   const sector = document.getElementById('flt-sector')?.value||'';
   const exch   = document.getElementById('flt-exch')?.value||'';
   const minSc  = parseFloat(document.getElementById('flt-score')?.value||'0');
+  const liqOn  = document.getElementById('flt-liq')?.checked || false;
   const tbody  = document.querySelector('tbody');
   if(!tbody) return;
 
@@ -1022,7 +1025,7 @@ function applyFilters() {{
   if(visible===0) {{
     const em = document.createElement('tr');
     em.className = 'empty-row';
-    em.innerHTML = `<td colspan="19" style="text-align:center;padding:40px;color:#2a4060;font-size:13px">🔍 No stocks match your filters — <button onclick="clearFilters()" style="background:none;border:none;color:var(--bl);cursor:pointer;font-size:12px;text-decoration:underline">Clear all filters</button></td>`;
+    em.innerHTML = `<td colspan="19" style="text-align:center;padding:40px;color:#2a4060;font-size:13px">ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ‚Â No stocks match your filters ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â <button onclick="clearFilters()" style="background:none;border:none;color:var(--bl);cursor:pointer;font-size:12px;text-decoration:underline">Clear all filters</button></td>`;
     tbody.appendChild(em);
   }}
 
@@ -1062,7 +1065,7 @@ function clearFilters() {{
   applyFilters();
 }}
 
-// ── Column sort ────────────────────────────────────────────────────────────────
+// ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Column sort ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
 function sortTable(th, colIdx) {{
   const tbody = document.querySelector('tbody');
   if(!tbody) return;
@@ -1097,7 +1100,7 @@ function sortTable(th, colIdx) {{
   }});
 }}
 
-// ── CSV Export ────────────────────────────────────────────────────────────────
+// ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ CSV Export ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
 function exportCSV() {{
   const rows = Array.from(document.querySelectorAll('tbody tr')).filter(r=>r.style.display!=='none');
   const headers = ['Ticker','Company','Exchange','Sector','MktCap','Price','MoS%','P/E','P/B','Piotroski','AltmanZ','Checklist','Score','Grade','Action','Date'];
@@ -1117,7 +1120,7 @@ function exportCSV() {{
   a.click();
 }}
 
-// ── Modal navigation ──────────────────────────────────────────────────────────
+// ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Modal navigation ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
 function showDetail(ticker) {{
   const d = STOCKS[ticker];
   if(!d) return;
@@ -1153,7 +1156,7 @@ document.addEventListener('keydown', e => {{
 // Click outside modal
 document.getElementById('overlay')?.addEventListener('click', closeDetail);
 
-// ── Init on load ─────────────────────────────────────────────────────────────
+// ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Init on load ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
 document.addEventListener('DOMContentLoaded', ()=>{{
   applyFilters();
   // Grade distribution bar
@@ -1173,45 +1176,45 @@ document.addEventListener('DOMContentLoaded', ()=>{{
 <!-- Glossary overlay -->
 <div id="glossary" onclick="if(event.target===this)this.style.display='none'">
   <div class="glossary-hdr">
-    <span style="font-size:14px;font-weight:700;color:var(--bl)">📖 Metric Glossary & Scoring Guide</span>
-    <button class="mclose" onclick="document.getElementById('glossary').style.display='none'">✕</button>
+    <span style="font-size:14px;font-weight:700;color:var(--bl)">ÃƒÂ°Ã…Â¸Ã¢â‚¬Å“Ã¢â‚¬â€œ Metric Glossary & Scoring Guide</span>
+    <button class="mclose" onclick="document.getElementById('glossary').style.display='none'">ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¢</button>
   </div>
   <div class="glossary-body">
     <div class="gterm"><div class="gterm-name">Piotroski F-Score (0-9)</div>
       <div class="gterm-def">9 binary signals across 3 categories: Profitability (ROA&gt;0, OCF&gt;0, improving ROA, OCF&gt;net income), Leverage (lower D/E, higher current ratio, no new shares), Efficiency (higher gross margin, higher asset turnover). Each signal = 1 point.</div>
-      <div class="gterm-why">Why N/A? yfinance couldn't retrieve income statement or balance sheet for this ticker — common for OTC pink sheets, foreign stocks, or very small companies with limited SEC filings.</div></div>
+      <div class="gterm-why">Why N/A? yfinance couldn't retrieve income statement or balance sheet for this ticker ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â common for OTC pink sheets, foreign stocks, or very small companies with limited SEC filings.</div></div>
     <div class="gterm"><div class="gterm-name">Altman Z-Score</div>
-      <div class="gterm-def">Bankruptcy predictor: Z = 1.2×(Working Capital/Assets) + 1.4×(Retained Earnings/Assets) + 3.3×(EBIT/Assets) + 0.6×(Market Cap/Total Liabilities) + 1.0×(Revenue/Assets). Safe &gt;2.99. Grey 1.81-2.99. Distress &lt;1.81.</div>
+      <div class="gterm-def">Bankruptcy predictor: Z = 1.2ÃƒÆ’Ã¢â‚¬â€(Working Capital/Assets) + 1.4ÃƒÆ’Ã¢â‚¬â€(Retained Earnings/Assets) + 3.3ÃƒÆ’Ã¢â‚¬â€(EBIT/Assets) + 0.6ÃƒÆ’Ã¢â‚¬â€(Market Cap/Total Liabilities) + 1.0ÃƒÆ’Ã¢â‚¬â€(Revenue/Assets). Safe &gt;2.99. Grey 1.81-2.99. Distress &lt;1.81.</div>
       <div class="gterm-why">Why N/A? Missing balance sheet data (total assets, liabilities, working capital). Most common for foreign listings, ADRs, or companies that don't file with SEC.</div></div>
     <div class="gterm"><div class="gterm-name">Margin of Safety (MoS%)</div>
-      <div class="gterm-def">MoS = (Average Intrinsic Value − Current Price) ÷ Current Price × 100. Uses the average of: Graham Number (√(22.5 × EPS × BVPS)), DCF (10-yr free cash flow discounted at 10%), and Net-Net (NCAV = Current Assets − Total Liabilities).</div>
+      <div class="gterm-def">MoS = (Average Intrinsic Value ÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢ Current Price) ÃƒÆ’Ã‚Â· Current Price ÃƒÆ’Ã¢â‚¬â€ 100. Uses the average of: Graham Number (ÃƒÂ¢Ã‹â€ Ã…Â¡(22.5 ÃƒÆ’Ã¢â‚¬â€ EPS ÃƒÆ’Ã¢â‚¬â€ BVPS)), DCF (10-yr free cash flow discounted at 10%), and Net-Net (NCAV = Current Assets ÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢ Total Liabilities).</div>
       <div class="gterm-why">Why N/A or very low? Either all three valuation methods returned no data (missing EPS/BVPS/FCF), or the stock trades above our estimated intrinsic value.</div></div>
     <div class="gterm"><div class="gterm-name">Promise Score (0-100)</div>
-      <div class="gterm-def">Composite score: MoS contributes ~35%, Piotroski ~20%, Altman Z ~15%, Buffett Checklist ~15%, Catalyst Score ~15%. Grade A ≥ 70 pts. B = 55-69. C = 40-54. D &lt; 40. F = failing multiple safety checks.</div>
+      <div class="gterm-def">Composite score: MoS contributes ~35%, Piotroski ~20%, Altman Z ~15%, Buffett Checklist ~15%, Catalyst Score ~15%. Grade A ÃƒÂ¢Ã¢â‚¬Â°Ã‚Â¥ 70 pts. B = 55-69. C = 40-54. D &lt; 40. F = failing multiple safety checks.</div>
       <div class="gterm-why">Low score? Usually means overvalued vs intrinsic models, or poor financial health signals (low Piotroski, low Z-score, high debt).</div></div>
     <div class="gterm"><div class="gterm-name">Graham Number</div>
-      <div class="gterm-def">√(22.5 × EPS × Book Value per Share). Graham's formula for maximum fair price for a defensive investor. Requires positive EPS and positive BVPS. Stock trading below Graham Number = "net net" quality value.</div>
-      <div class="gterm-why">Why N/A? Company has negative earnings (EPS ≤ 0) or negative book value — Graham Number is only defined for profitable companies with positive equity.</div></div>
+      <div class="gterm-def">ÃƒÂ¢Ã‹â€ Ã…Â¡(22.5 ÃƒÆ’Ã¢â‚¬â€ EPS ÃƒÆ’Ã¢â‚¬â€ Book Value per Share). Graham's formula for maximum fair price for a defensive investor. Requires positive EPS and positive BVPS. Stock trading below Graham Number = "net net" quality value.</div>
+      <div class="gterm-why">Why N/A? Company has negative earnings (EPS ÃƒÂ¢Ã¢â‚¬Â°Ã‚Â¤ 0) or negative book value ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Graham Number is only defined for profitable companies with positive equity.</div></div>
     <div class="gterm"><div class="gterm-name">DCF Value</div>
-      <div class="gterm-def">Discounted Cash Flow: projects 10 years of FCF at current growth rate, then applies terminal value, discounted at 10% WACC. Simplified model — actual DCF should use company-specific WACC and conservative growth assumptions.</div>
-      <div class="gterm-why">Why N/A? Negative or zero free cash flow — DCF only works for cash-generative businesses. Loss-making or early-stage companies require different approaches (EV/Revenue, P/S).</div></div>
+      <div class="gterm-def">Discounted Cash Flow: projects 10 years of FCF at current growth rate, then applies terminal value, discounted at 10% WACC. Simplified model ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â actual DCF should use company-specific WACC and conservative growth assumptions.</div>
+      <div class="gterm-why">Why N/A? Negative or zero free cash flow ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â DCF only works for cash-generative businesses. Loss-making or early-stage companies require different approaches (EV/Revenue, P/S).</div></div>
     <div class="gterm"><div class="gterm-name">Net-Net Value (NCAV)</div>
-      <div class="gterm-def">Net Current Asset Value = Current Assets − ALL Liabilities (current + long-term). If NCAV &gt; market price, you're buying liquid assets for less than liquidation value. Graham called this the safest possible investment. Oppenheimer (1986) showed Net-Nets returned ~30%/yr.</div>
-      <div class="gterm-why">Why N/A? NCAV is negative (liabilities exceed current assets) — common for capital-intensive businesses, banks, and companies with heavy long-term debt.</div></div>
+      <div class="gterm-def">Net Current Asset Value = Current Assets ÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢ ALL Liabilities (current + long-term). If NCAV &gt; market price, you're buying liquid assets for less than liquidation value. Graham called this the safest possible investment. Oppenheimer (1986) showed Net-Nets returned ~30%/yr.</div>
+      <div class="gterm-why">Why N/A? NCAV is negative (liabilities exceed current assets) ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â common for capital-intensive businesses, banks, and companies with heavy long-term debt.</div></div>
     <div class="gterm"><div class="gterm-name">Industry-Specific Valuation</div>
-      <div class="gterm-def">Each sector uses the academically most-validated method: Banks → P/B vs Fair P/B (Fama-French 1992). Tech → EV/Revenue + Rule of 40 (Novy-Marx 2013). Industrials → EV/EBITDA vs 8x comps (Gray &amp; Carlisle 2012). Healthcare → P/S vs growth (Damodaran). Default → Graham+DCF+NetNet average.</div>
-      <div class="gterm-why">Why does the fair value say N/A? The required inputs for that sector's formula are missing — e.g., bank has no ROE data, or tech has negative revenue growth.</div></div>
+      <div class="gterm-def">Each sector uses the academically most-validated method: Banks ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ P/B vs Fair P/B (Fama-French 1992). Tech ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ EV/Revenue + Rule of 40 (Novy-Marx 2013). Industrials ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ EV/EBITDA vs 8x comps (Gray &amp; Carlisle 2012). Healthcare ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ P/S vs growth (Damodaran). Default ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Graham+DCF+NetNet average.</div>
+      <div class="gterm-why">Why does the fair value say N/A? The required inputs for that sector's formula are missing ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â e.g., bank has no ROE data, or tech has negative revenue growth.</div></div>
     <div class="gterm"><div class="gterm-name">Buffett/Munger Checklist</div>
       <div class="gterm-def">14-point quality screen based on principles from Buffett's shareholder letters: EPS &gt; 0, ROE &gt; 15%, D/E &lt; 0.5, revenue growth &gt; 0, positive FCF, P/E &lt; 15 or P/B &lt; 1, gross margin &gt; 30%, insider ownership &gt; 10%, operating margin &gt; 10%, micro-cap status. Score = points passed.</div>
-      <div class="gterm-why">Low score? Most micro-caps fail multiple criteria — that's normal and expected. Focus on improving trends, not absolute score.</div></div>
+      <div class="gterm-why">Low score? Most micro-caps fail multiple criteria ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â that's normal and expected. Focus on improving trends, not absolute score.</div></div>
     <div class="gterm"><div class="gterm-name">Catalyst Score (0-25)</div>
       <div class="gterm-def">Scores recent news for value-creating events: M&amp;A (+5), Share Buyback (+4), Special Dividend (+4), Regulatory Approval (+5), Major Contract (+4), Restructuring (+3), Activist Investor (+4), Insider Buying (+3), Earnings Beat (+3), Debt Elimination (+3). Capped at 25.</div>
-      <div class="gterm-why">Zero catalysts? Either no recent news found, or news didn't match any of our 11 catalyst keywords. The system scans Yahoo Finance headlines — coverage varies by listing type.</div></div>
+      <div class="gterm-why">Zero catalysts? Either no recent news found, or news didn't match any of our 11 catalyst keywords. The system scans Yahoo Finance headlines ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â coverage varies by listing type.</div></div>
     <div class="gterm"><div class="gterm-name">Hidden Value Signals</div>
       <div class="gterm-def">Off-balance-sheet or technical signals: SEC Form 4 insider buying, short interest &gt;20% (squeeze potential), near 52-week low (statistical reversion), undervalued real estate / patents / brands, sum-of-parts discount vs peers.</div>
       <div class="gterm-why">No hidden value? These signals require specific data points (insider transactions, short data, 52-week range) that may not be available for all tickers, especially OTC and foreign listings.</div></div>
     <div class="gterm"><div class="gterm-name">Action (BUY / WATCH / PASS)</div>
-      <div class="gterm-def">Systematic action based purely on Grade: A (Score ≥ 70) = BUY, B (55-69) = WATCH, C/D/F (&lt; 55) = PASS. NOT financial advice — this is a first-pass screen. Always conduct your own due diligence before investing.</div>
+      <div class="gterm-def">Systematic action based purely on Grade: A (Score ÃƒÂ¢Ã¢â‚¬Â°Ã‚Â¥ 70) = BUY, B (55-69) = WATCH, C/D/F (&lt; 55) = PASS. NOT financial advice ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â this is a first-pass screen. Always conduct your own due diligence before investing.</div>
       <div class="gterm-why">This is a mechanical signal, not a recommendation. A "PASS" stock may still be interesting; a "BUY" may have qualitative issues not captured by these models.</div></div>
   </div>
 </div>

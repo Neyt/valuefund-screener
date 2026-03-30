@@ -748,9 +748,11 @@ def create_database():
 
         notes              TEXT,
 
-        grade              TEXT
+        grade              TEXT,
 
-    )''')
+        avg_volume         REAL
+
+    '''))
 
     # Migration: add columns if upgrading
 
@@ -779,6 +781,8 @@ def create_database():
         ('bvps','REAL'),('eps_stored','REAL'),('operating_margin','REAL'),
 
         ('action','TEXT'),
+
+        ('avg_volume','REAL'),
 
     ]
 
@@ -842,9 +846,9 @@ def insert_into_db(data, report_path):
          sector, industry, pe_ratio, pb_ratio, ps_ratio, fcf_yield, gross_margin,
          beta, ev_revenue, dividend_yield, current_ratio, bvps, eps_stored, operating_margin,
          action, analysis_date, report_path, notes, grade,
-         short_thesis, detailed_thesis)
+         short_thesis, detailed_thesis, avg_volume)
         VALUES (?,?,?,?,?, ?,?,?,?,?, ?,?,?, ?,?,?,?, ?,?,?,?, ?,?,?,
-                ?,?,?,?,?,?,?, ?,?,?,?,?,?,?, ?,?,?,?,?,?,?)''',
+                ?,?,?,?,?,?,?, ?,?,?,?,?,?,?, ?,?,?,?,?,?,?,?)''',
         (data['ticker'], data['company_name'], data['exchange'],
          data.get('market_cap'), data.get('current_price'),
          data.get('graham_number'), data.get('dcf_value'),
@@ -864,7 +868,8 @@ def insert_into_db(data, report_path):
          action,
          date.today().strftime('%Y-%m-%d'),
          report_path, data.get('notes'), data.get('grade'),
-         None, None))
+         None, None,
+         data.get('avg_volume')))
 
     conn.commit(); conn.close()
 
@@ -1958,6 +1963,8 @@ def fetch_and_analyze(ticker, exchange, notes):
 
         si   = _safe(info.get('shortPercentOfFloat'))
 
+        av   = _safe(info.get('averageVolume') or info.get('averageDailyVolume10Day'))
+
 
 
         # 52-week position (0=at low, 1=at high)
@@ -2137,6 +2144,8 @@ def fetch_and_analyze(ticker, exchange, notes):
             ev_revenue=(_safe(info.get('enterpriseValue'))/_safe(info.get('totalRevenue'))
 
                         if (_safe(info.get('enterpriseValue')) and _safe(info.get('totalRevenue')) and _safe(info.get('totalRevenue'))>0) else None),
+
+            avg_volume=av,
 
         )
 
