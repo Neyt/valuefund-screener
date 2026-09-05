@@ -35,3 +35,6 @@ desktop.ini
 # IDE
 .vscode/
 .idea/
+
+# Patch backups
+*.bak_*

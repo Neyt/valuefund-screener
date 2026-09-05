@@ -1,38 +1,38 @@
 {
   "_comment": "valuefund.substack.com — Scaling Configuration",
-
   "analysis": {
     "batch_size": 50,
     "parallel_workers": 4,
     "rate_limit_sleep_sec": 1.2,
-    "max_market_cap": 500000000,
-    "min_price": 0.10,
+    "max_market_cap": 2000000000,
+    "min_price": 0.1,
     "staleness_days": 14,
     "staleness_price_move_pct": 10.0,
     "skip_after_n_failures": 3,
-    "request_timeout_sec": 20
+    "request_timeout_sec": 20,
+    "_max_market_cap_note": "2026-09-05: raised from 500M to 2B to match what analyzer.py had hardcoded all along; 4,311 DB rows sit in 500M-2B. Now actually read by analyzer.py.",
+    "dead_recheck_days": 90,
+    "filter_recheck_days": 30,
+    "recheck_max_per_run": 100,
+    "_skipreg_v2": true
   },
-
   "database": {
     "path": "D:\\StockAnalysis\\database\\stocks.db",
     "skip_registry_path": "D:\\StockAnalysis\\config\\skip_registry.json",
     "universe_path": "D:\\StockAnalysis\\config\\universe.csv"
   },
-
   "dashboard": {
     "html_path": "D:\\StockAnalysis\\database\\index.html",
     "page_size": 100,
     "max_inline_stocks": 500,
     "use_pagination": true
   },
-
   "scheduling": {
     "daily_run_time": "07:00",
     "weekend_run": false,
     "max_daily_stocks": 1000,
     "rounds_per_run": 20
   },
-
   "costs": {
     "yfinance_cost_per_stock": 0.0,
     "storage_cost_per_stock_mb": 0.005,

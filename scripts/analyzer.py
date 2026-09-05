@@ -121,6 +121,21 @@ def _load_batch_size():
         return 50
 BATCH_SIZE = _load_batch_size()
 
+# __VF_SKIPREG_V2__: screening limits come from config, not hardcoded literals.
+def _load_screen_limits():
+    try:
+        import json
+        with open(r"D:\StockAnalysis\config\smart_config.json") as _f:
+            _a = json.load(_f).get("analysis", {})
+        return (float(_a.get("max_market_cap", 2_000_000_000)),
+                float(_a.get("min_price", 0.10)))
+    except Exception:
+        return 2_000_000_000.0, 0.10
+MAX_MARKET_CAP, MIN_PRICE = _load_screen_limits()
+# Verdicts that start with this prefix are SCREENING decisions, not data
+# failures. skip_registry must never count them toward 'dead'.
+FILTER_PREFIX = "FILTER: "
+
 
 
 HTTP_TIMEOUT = 6      # seconds per external HTTP call
@@ -1954,9 +1969,12 @@ def fetch_and_analyze(ticker, exchange, notes):
 
 
 
-        if not price or price < 0.10: return None, f"Price unavailable: {price}"
+        if not price: return None, "Price unavailable: None"
+        if price < MIN_PRICE:
+            return None, f"{FILTER_PREFIX}Price below floor: {price} < {MIN_PRICE}"
 
-        if mcap and mcap > 2_000_000_000: return None, f"Too large (>): {_fmt_mcap(mcap)}"
+        if mcap and mcap > MAX_MARKET_CAP:
+            return None, f"{FILTER_PREFIX}Too large (>): {_fmt_mcap(mcap)}"
 
 
 
