@@ -1,124 +1,182 @@
+# -*- coding: utf-8 -*-
 """
-qf2_fallback.py - Pull fundamentals from the Quantum Fund 2 DuckDB (13GB FMP data)
-as a fallback when yfinance returns insufficient data.
+qf2_fallback.py  --  QF2 FMP fundamentals lookup via Parquet cache
 
-DB: D:/quantum fund 2/results/data/qsconnect/database/qsconnect.duckdb
-Tables: bulk_key_metrics_annual_fmp, bulk_ratios_annual_fmp,
-        bulk_balance_sheet_statement_annual_fmp,
-        bulk_income_statement_annual_fmp, bulk_cash_flow_statement_annual_fmp
+Replaces the DuckDB approach which crashes with STATUS_ACCESS_VIOLATION
+on this system.  Instead reads the Parquet files directly using pandas
+(same files the prescreen uses) and caches the merged DataFrame in memory.
+
+The first call is slow (~3-5s to load Parquet files), all subsequent
+calls are fast O(1) dict lookups.
+
+Public API:
+    get_qf2_fundamentals(ticker, max_age_years=3) -> dict | None
+    check_tickers_in_qf2(tickers: list) -> list
 """
-import os, time, math, threading
-from typing import Optional, Dict, Any
 
-QF2_DB_PATH = r"D:/quantum fund 2/results/data/qsconnect/database/qsconnect.duckdb"
-_conn = None
-_conn_lock = threading.Lock()
-_conn_failed = False
+import os, threading, glob
+from datetime import date, timedelta
+
+FMP_CACHE  = r"D:/quantum fund 2/results/data/qsconnect/cache/fmp"
+_YEARS     = [2022, 2023, 2024, 2025, 2026]   # which annual parquet years to load
+
+_lock      = threading.Lock()
+_loaded    = False
+_load_failed = False
+_km_dict   = {}   # symbol -> latest key_metrics row (dict)
+_inc_dict  = {}   # symbol -> latest income row (dict)
 
 
-def _get_connection():
-    global _conn, _conn_failed
-    if _conn_failed: return None
-    if _conn is not None: return _conn
-    with _conn_lock:
-        if _conn is not None: return _conn
+def _load_once():
+    """Load Parquet files into in-memory dicts (called once, lazy)."""
+    global _loaded, _load_failed, _km_dict, _inc_dict
+    if _loaded or _load_failed:
+        return
+
+    with _lock:
+        if _loaded or _load_failed:
+            return
         try:
-            import duckdb
-            if not os.path.exists(QF2_DB_PATH):
-                _conn_failed = True; return None
-            t0 = time.time()
-            _conn = duckdb.connect(QF2_DB_PATH, read_only=True)
-            print(f"[qf2] DuckDB opened in {time.time()-t0:.1f}s", flush=True)
-        except Exception as e:
-            print(f"[qf2] Cannot open DB: {e}", flush=True)
-            _conn_failed = True; return None
-    return _conn
+            import pandas as pd
+        except ImportError:
+            _load_failed = True
+            return
+
+        # --- Key metrics ---
+        km_files = []
+        for y in _YEARS:
+            pat = FMP_CACHE + f"/bulk-key-metrics_{y}_annual-*.parquet"
+            km_files.extend(sorted(glob.glob(pat)))
+
+        if not km_files:
+            _load_failed = True
+            return
+
+        try:
+            km = pd.concat([pd.read_parquet(f) for f in km_files], ignore_index=True)
+            km["date"] = pd.to_datetime(km["date"], errors="coerce")
+            km_latest  = (km.sort_values("date", ascending=False)
+                            .drop_duplicates(subset="symbol", keep="first"))
+            _km_dict = {
+                row["symbol"].strip().upper(): row.to_dict()
+                for _, row in km_latest.iterrows()
+            }
+        except Exception:
+            _load_failed = True
+            return
+
+        # --- Income statement (for revenue / net income) ---
+        inc_files = []
+        for y in _YEARS:
+            pat = FMP_CACHE + f"/bulk-income-statement_{y}_annual-*.parquet"
+            inc_files.extend(sorted(glob.glob(pat)))
+
+        if inc_files:
+            try:
+                inc = pd.concat([pd.read_parquet(f) for f in inc_files], ignore_index=True)
+                inc["date"] = pd.to_datetime(inc["date"], errors="coerce")
+                inc_latest  = (inc.sort_values("date", ascending=False)
+                                  .drop_duplicates(subset="symbol", keep="first"))
+                _inc_dict = {
+                    row["symbol"].strip().upper(): row.to_dict()
+                    for _, row in inc_latest.iterrows()
+                }
+            except Exception:
+                pass   # income is optional; key metrics still usable
+
+        _loaded = True
 
 
-def _s(v):
+def _safe(v):
     try:
-        if v is None: return None
         f = float(v)
-        return None if (math.isnan(f) or math.isinf(f)) else f
-    except: return None
-
-
-def get_qf2_fundamentals(ticker: str, max_age_years: int = 3) -> Optional[Dict[str, Any]]:
-    """Fetch fundamental data for ticker from QF2 DuckDB. Returns dict or None."""
-    conn = _get_connection()
-    if conn is None: return None
-    try:
-        from datetime import datetime, timedelta
-        cutoff = (datetime.now() - timedelta(days=365*max_age_years)).strftime('%Y-%m-%d')
-
-        km = conn.execute("""
-            SELECT peRatio, pbRatio, enterpriseValueOverEBITDA,
-                   freeCashFlowYield, dividendYield, currentRatio, debtToEquity,
-                   netIncomePerShare, bookValuePerShare, roic, date
-            FROM bulk_key_metrics_annual_fmp
-            WHERE symbol=? AND date>=? ORDER BY date DESC LIMIT 1
-        """, [ticker, cutoff]).fetchone()
-        if km is None: return None
-
-        rt = conn.execute("""
-            SELECT returnOnEquity, returnOnAssets, grossProfitMargin,
-                   operatingProfitMargin, netProfitMargin
-            FROM bulk_ratios_annual_fmp
-            WHERE symbol=? AND date>=? ORDER BY date DESC LIMIT 1
-        """, [ticker, cutoff]).fetchone()
-
-        inc = conn.execute("""
-            SELECT revenue, netIncome, weightedAverageShsOut
-            FROM bulk_income_statement_annual_fmp
-            WHERE symbol=? AND date>=? ORDER BY date DESC LIMIT 1
-        """, [ticker, cutoff]).fetchone()
-
-        bs = conn.execute("""
-            SELECT totalAssets, totalCurrentAssets, totalLiabilities
-            FROM bulk_balance_sheet_statement_annual_fmp
-            WHERE symbol=? AND date>=? ORDER BY date DESC LIMIT 1
-        """, [ticker, cutoff]).fetchone()
-
-        cf = conn.execute("""
-            SELECT operatingCashFlow, capitalExpenditure
-            FROM bulk_cash_flow_statement_annual_fmp
-            WHERE symbol=? AND date>=? ORDER BY date DESC LIMIT 1
-        """, [ticker, cutoff]).fetchone()
-
-        d = {'_source': 'qf2_fmp', '_date': km[10]}
-        if km:
-            de = _s(km[6])
-            d.update(pe_ratio=_s(km[0]), pb_ratio=_s(km[1]), ev_ebitda=_s(km[2]),
-                     fcf_yield=_s(km[3]), dividend_yield=_s(km[4]),
-                     current_ratio=_s(km[5]),
-                     debt_equity=(de/100.0 if de is not None else None),
-                     eps=_s(km[7]), bvps=_s(km[8]), roic=_s(km[9]))
-        if rt:
-            d.update(roe=_s(rt[0]), roa=_s(rt[1]), gross_margin=_s(rt[2]),
-                     operating_margin=_s(rt[3]), net_margin=_s(rt[4]))
-        if inc:
-            d.update(revenue=_s(inc[0]), net_income=_s(inc[1]), shares=_s(inc[2]))
-        if bs:
-            d.update(total_assets=_s(bs[0]), current_assets=_s(bs[1]),
-                     total_liabilities=_s(bs[2]))
-        if cf:
-            ocf = _s(cf[0]); cap = _s(cf[1])
-            d.update(operating_cash_flow=ocf, capex=cap,
-                     fcf=(ocf + (cap or 0)) if ocf is not None else None)
-        return d if len(d) > 2 else None
-    except Exception as e:
-        print(f"[qf2] Error for {ticker}: {e}", flush=True)
+        return None if (f != f) else f   # NaN check
+    except Exception:
         return None
 
 
-def check_tickers_in_qf2(tickers: list) -> list:
-    """Return which tickers exist in QF2 DB."""
-    conn = _get_connection()
-    if conn is None: return []
+def get_qf2_fundamentals(ticker: str, max_age_years: int = 3):
+    """
+    Return a dict of fundamental data for ticker from QF2 Parquet cache.
+    Returns None if ticker not found or data is older than max_age_years.
+    """
+    _load_once()
+    if _load_failed:
+        return None
+
+    sym = ticker.strip().upper()
+    km  = _km_dict.get(sym)
+    if km is None:
+        return None
+
+    # Staleness check
+    cutoff = date.today() - timedelta(days=365 * max_age_years)
+    rec_date = km.get("date")
     try:
-        ph = ','.join(['?']*len(tickers))
-        rows = conn.execute(
-            f"SELECT DISTINCT symbol FROM bulk_key_metrics_annual_fmp WHERE symbol IN ({ph})",
-            tickers).fetchall()
-        return [r[0] for r in rows]
-    except: return []
+        if hasattr(rec_date, "date"):
+            rec_date = rec_date.date()
+        if rec_date is not None and rec_date < cutoff:
+            return None
+    except Exception:
+        pass
+
+    inc = _inc_dict.get(sym, {})
+
+    # -- revenue & net income from income statement -----------------------
+    revenue    = _safe(inc.get("revenue"))
+    net_income = _safe(inc.get("netIncome"))
+    gross_profit = _safe(inc.get("grossProfit"))
+
+    # -- key metrics fields ------------------------------------------------
+    def _k(key): return _safe(km.get(key))
+
+    shares = _k("investedCapital")   # fallback
+    # better: use marketCap / price implied, or directly
+    # bookValuePerShare * sharesOutstanding isn't directly available
+    # but revenuePerShare lets us back-calc if revenue is known
+    if revenue and _k("revenuePerShare") and _k("revenuePerShare") > 0:
+        shares = revenue / _k("revenuePerShare")
+
+    result = {
+        # Valuation
+        "pe_ratio":          _k("peRatio"),
+        "pb_ratio":          _k("pbRatio"),
+        "ev_ebitda":         _k("enterpriseValueOverEBITDA"),
+        # Profitability
+        "roe":               _k("roe"),
+        "roa":               _k("returnOnTangibleAssets"),
+        "roic":              _k("roic"),
+        "gross_margin":      (gross_profit / revenue) if (gross_profit and revenue and revenue > 0) else None,
+        "operating_margin":  None,   # not in key_metrics
+        "net_margin":        (_safe(km.get("netIncomePerShare")) / _safe(km.get("revenuePerShare"))
+                              if (_k("netIncomePerShare") and _k("revenuePerShare") and _k("revenuePerShare") > 0)
+                              else None),
+        # Per-share
+        "eps":               _k("netIncomePerShare"),
+        "bvps":              _k("bookValuePerShare"),
+        "fcf":               None,  # not per-company in key_metrics
+        # Balance sheet ratios
+        "current_ratio":     _k("currentRatio"),
+        "debt_equity":       _k("debtToEquity"),
+        # Income / cash flow totals
+        "revenue":           revenue,
+        "net_income":        net_income,
+        "shares":            shares,
+        # Dividend
+        "dividend_yield":    _k("dividendYield"),
+        # Cash flow
+        "operating_cash_flow": None,
+        "capex":             None,
+        # Graham
+        "graham_net_net":    _k("grahamNetNet"),
+        "working_capital":   _k("workingCapital"),
+    }
+    return result
+
+
+def check_tickers_in_qf2(tickers: list) -> list:
+    """Return subset of tickers that exist in the QF2 Parquet cache."""
+    _load_once()
+    if _load_failed:
+        return []
+    return [t for t in tickers if t.strip().upper() in _km_dict]
