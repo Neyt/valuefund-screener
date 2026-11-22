@@ -1,0 +1,73 @@
+<p><em>Auditoría de mi propio screener de valor profundo: 12.766 empresas, una tarde y un ranking en el que tuve que dejar de confiar. Por Ney Torres | linkedin.com/in/neytorres</em></p>
+<h2>La acción número uno de mi lista</h2>
+<p>El domingo 22 de noviembre de 2026 le pedí a un agente de inteligencia artificial que auditara mi propio screener. El primer hallazgo casi daba risa: en el ancho de un celular la página se desbordaba hacia un lado, y su letra más pequeña medía nueve píxeles.</p>
+<p>Después vino la primera fila. Era una empresa pequeña de tecnología que cotiza en Estados Unidos. A su lado: nota A, puntaje 100 sobre 100, acción "BUY". Su margen de seguridad<sup>1</sup> era 100,0%. Su P/E<sup>2</sup> era 0,0. Una nota generada por el programa decía que su caja equivalía al 9.755% de su valor en bolsa.</p>
+<p>Ningún negocio real se ve así. Una empresa con caja que vale 97 veces su precio no se queda tranquila en el primer lugar de una página gratuita. Algo en mi propia herramienta estaba roto, y le estaba diciendo a la gente que comprara.</p>
+<h2>El problema, dicho claro</h2>
+<p>El screener lee los estados financieros de 12.766 empresas que cotizan en bolsa, casi todas pequeñas o diminutas, y le pone a cada una una nota de la A a la F. La idea es simple: por la nota A empiezo a leer reportes anuales. Por eso el boletín se llama Empieza con las "A".</p>
+<p>Eso solo funciona si una A es escasa. Así que las conté.</p>
+<h2>Cómo lo revisé</h2>
+<p>No toqué la base de datos. Tomé las mismas 12.766 filas que publica la página y le hice cuatro preguntas a cada una. ¿Es una empresa que opera? ¿Es el único listado de esa empresa? ¿Pueden existir estos números en la vida real? ¿Cuándo se analizó por última vez?</p>
+<p>Luego ordené lo que sobrevivió por percentil<sup>3</sup>: cada empresa se compara con las demás en valor, en calidad y en seguridad financiera, y solo una parte fija puede recibir la mejor nota.</p>
+<h2>Cuatro lecciones que puedes usar hoy en cualquier screener</h2>
+<p><strong>1. Cuenta la mejor nota antes de confiar en ella.</strong> Mi screener le dio una A a 4.726 de 12.766 empresas. Eso es el 37%. Peor: 2.325 empresas tenían un puntaje perfecto de 100. Cuando una de cada tres acciones es "excelente", la nota no dice nada. Abre tu screener, cuenta el grupo de arriba y divide. Si pasa por mucho de una de cada diez, ordena por otra cosa.</p>
+<p><strong>2. Un número imposible es un error de datos, no una ganga.</strong> La acción del primer lugar reporta sus cuentas en una moneda y cotiza en otra. El programa dividió una entre otra y encontró un milagro. Un margen de seguridad del 100%, un P/E menor a 2 o una caja que vale varias veces la empresa son motivos para revisar la fuente, nunca para comprar.</p>
+<p><strong>3. Mira la fecha de cada fila, no la fecha de la página.</strong> Mi página decía "Updated 2026-11-22". Las primeras 25 empresas se habían analizado entre el 30 de marzo y el 8 de abril. Un puntaje de siete meses estaba encima de miles de puntajes frescos, porque nada había llegado a empujar hacia abajo un 100 perfecto.</p>
+<p><strong>4. Una unidad mala se esconde en una columna buena.</strong> Un fideicomiso inmobiliario mostraba un rendimiento por dividendo de 815,0%. La columna guardaba 8,15 donde la página esperaba 0,0815. Si una columna mezcla unidades, todo ranking construido sobre ella está mal de una forma que nadie nota.</p>
+<h2>La pregunta</h2>
+<p>Esto era lo que necesitaba saber. Si saco todo lo que no es una empresa que opera, cada listado repetido, cada fila con números que no pueden existir y cada análisis de más de 30 días, y después califico lo que queda con una curva: ¿cuántas de las 4.726 empresas "A" siguen ahí? ¿Y la acción del primer lugar sigue en la lista?</p>
+<p>PAYWALLMARK</p>
+<h2>El marcador</h2>
+<p>De 12.766 empresas, 7.001 pasaron las cuatro preguntas. El resto salió del ranking, y la página ahora dice el motivo de cada una:</p>
+<ul>
+<li><strong>760</strong> eran fondos, fondos cerrados<sup>4</sup> o empresas cascarón. Un fondo que cotiza por debajo del valor de lo que tiene es otro animal, distinto de un negocio barato, y mis fórmulas trataban su descuento como margen de seguridad.</li>
+<li><strong>1.833</strong> eran el segundo o tercer listado de una empresa que ya estaba en la lista: la misma minera en Toronto, en Londres y en el mercado extrabursátil de Estados Unidos, contada tres veces.</li>
+<li><strong>2.364</strong> tenían números que no podían ser reales o no tenían datos suficientes para juzgar.</li>
+<li><strong>808</strong> no se habían analizado en los últimos 30 días.</li>
+</ul>
+<p>En palabras: el 45% de lo que la página estaba ordenando nunca debió ordenarse.</p>
+<p>La nota A ahora es el 10% superior de los sobrevivientes: <strong>701 empresas, frente a 4.726</strong>. La B es el siguiente 20%, la C el siguiente 30%, la D el siguiente 25% y la F el resto.</p>
+<p>La acción que era número uno salió del ranking. Su ficha lista cinco errores de datos distintos y un motivo más: su análisis era del 30 de marzo.</p>
+<h2>Qué reemplazó al puntaje viejo</h2>
+<p>Cada empresa recibe ahora tres números de 0 a 100. El valor pesa 45% de la nota, la calidad 30% y la seguridad 25%. Esos pesos los elegí yo, y están escritos al pie de la página.</p>
+<p>El cambio más grande es que un banco ya no se califica como una fábrica. Ocho tipos de empresa, 2.460 en total, tienen ahora sus propias reglas, y la mayoría se compara solo con las de su tipo:</p>
+<ul>
+<li><strong>Bancos (169):</strong> precio sobre valor en libros tangible<sup>5</sup> frente al retorno sobre patrimonio tangible<sup>6</sup>, con un precio justo que supone que el inversionista exige 10% al año.</li>
+<li><strong>Aseguradoras (48):</strong> precio sobre libros, retorno sobre patrimonio y cuánto patrimonio respalda los activos.</li>
+<li><strong>Fideicomisos inmobiliarios (126):</strong> precio sobre fondos de operación<sup>7</sup>, el rendimiento que implica el portafolio de propiedades y la deuda frente a la utilidad en efectivo.</li>
+<li><strong>Biotecnológicas (99):</strong> caja neta frente al valor en bolsa, y cuántos años dura la caja.</li>
+<li><strong>Software (341):</strong> valor de la empresa frente a la utilidad bruta, más crecimiento y margen de caja sumados.</li>
+<li><strong>Comercio minorista (232), industriales (1.372) y holdings (73):</strong> utilidad antes de intereses e impuestos, rotación de inventario, utilidad promediada en cinco años e inversiones frente al valor en bolsa.</li>
+</ul>
+<p>Mineras, petroleras y navieras conservan los factores generales, pero reciben una marca cuando los números dicen "abre el reporte anual": hoy la llevan 392 empresas.</p>
+<h2>Dos cosas que la auditoría encontró sin que yo las buscara</h2>
+<p><strong>La columna de deuda estaba mal en 1.088 empresas.</strong> La base mostraba deuda cero, o una cifra muchas veces menor, mientras el último balance mostraba préstamos reales. Una administradora de activos aparecía con deuda de 0,004 veces su patrimonio; su balance dice 0,41. El screener ahora toma la cifra del balance y avisa cuando lo hace.</p>
+<p><strong>La mayoría de las "compras de directivos" no son directivos comprando.</strong> Bajé un año de formularios Form 4<sup>8</sup> de las 179 empresas de nota A que los presentan. Al principio, una biotecnológica lideraba la lista con 30,6 millones de dólares en compras. Línea por línea, 30.612.625 dólares venían de fondos grandes que participaron en un financiamiento. Los ejecutivos y directores habían comprado 657 dólares en acciones y vendido 1,5 millones. Al separar las dos cosas, 25 de las 179 empresas muestran compras reales de quienes las dirigen.</p>
+<h2>Qué haría distinto</h2>
+<ul>
+<li>Habría contado las A el primer día. El 37% estuvo a la vista en la página todo el tiempo.</li>
+<li>No habría escrito "BUY" junto a una nota. La página ahora dice que una nota es un motivo para leer los reportes.</li>
+<li>Habría puesto a prueba el ranking contra el tiempo desde el inicio. Desde el 22 de noviembre el screener guarda su top 50 cada día y el ranking completo cada semana. La primera comparación a 30 días llega a fines de diciembre, y la voy a publicar salga como salga.</li>
+<li>Los precios de listados extranjeros quedan en su moneda; el valor en bolsa se convierte a dólares. Mezclar las dos cosas en silencio fue la raíz de los peores errores.</li>
+</ul>
+<h2>Resumen</h2>
+<ul>
+<li>El screener viejo le daba una A a 4.726 de 12.766 empresas (37%); 2.325 tenían un 100 perfecto.</li>
+<li>Al sacar 760 fondos y cascarones, 1.833 listados repetidos, 2.364 filas con datos imposibles o faltantes y 808 análisis viejos, quedan 7.001 empresas.</li>
+<li>La nota A ahora son 701 empresas, el 10% superior.</li>
+<li>2.460 empresas de ocho sectores se califican con sus propias reglas; 392 llevan una marca para abrir los reportes.</li>
+<li>La deuda estaba subestimada en 1.088 empresas y ahora sale del balance.</li>
+<li>De 179 empresas de nota A con formularios de directivos, 25 muestran compras reales de ejecutivos y directores.</li>
+<li>El ranking se registra a diario para poder juzgarlo contra lo que hagan los precios.</li>
+</ul>
+<p>El screener es gratuito y está en valuefund-screener.vercel.app/screener.html (en inglés).</p>
+<p><em>Este es un registro de mi trabajo con mi propia herramienta. No es asesoría financiera, y una nota no es una recomendación de comprar ni de vender nada.</em></p>
+<h2>Notas</h2>
+<p>1. Margen de seguridad: qué tan por debajo está el precio de una estimación de lo que vale la empresa, en porcentaje.</p>
+<p>2. P/E: el precio de la acción dividido para la utilidad por acción de un año.</p>
+<p>3. Percentil: la posición de una empresa entre todas las demás, de 0 (la peor) a 100 (la mejor).</p>
+<p>4. Fondo cerrado: un fondo que cotiza en bolsa con un número fijo de acciones y que puede valer más o menos que lo que tiene adentro.</p>
+<p>5. Valor en libros tangible: lo que les quedaría en papel a los dueños después de restar las deudas y los activos que no se pueden tocar, como la plusvalía.</p>
+<p>6. Retorno sobre patrimonio tangible: la utilidad de un año dividida para el valor en libros tangible.</p>
+<p>7. Fondos de operación: la utilidad de un fideicomiso inmobiliario sumándole de vuelta la depreciación; la medida usual de lo que ganan sus edificios.</p>
+<p>8. Form 4: el formulario que ejecutivos, directores y grandes accionistas en Estados Unidos deben presentar cuando compran o venden acciones de su empresa.</p>
