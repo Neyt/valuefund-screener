@@ -59,14 +59,16 @@ def to_usd(value, cur, rates):
     return None if not r else value / div / r
 
 def history(symbols):
-    """{symbol: {"cur": "USD", "rows": [[year, revenue, net income, diluted EPS, free cash flow, equity, debt], ...]}}"""
+    """{symbol: {"cur": "USD", "rows": [[year, revenue, net income, diluted EPS, free cash flow, equity, debt], ...],
+                 "x": {latest-year extras: assets, gw (goodwill + intangibles), cash, da, gp, ebitda}}}"""
     import pandas as pd
+    VERSION = 2
     newest = max((os.path.getmtime(f) for f in glob.glob(FMP_CACHE + "/bulk-*_annual-*.parquet")), default=0)
     want = set(symbols)
     if os.path.exists(HIST_CACHE) and os.path.getmtime(HIST_CACHE) > newest:
         try:
             with open(HIST_CACHE, encoding="utf-8") as fh: c = json.load(fh)
-            if want <= set(c.get("_symbols", [])): return c["data"]
+            if c.get("_v") == VERSION and want <= set(c.get("_symbols", [])): return c["data"]
         except Exception:
             pass
     this = date.today().year
@@ -80,24 +82,31 @@ def history(symbols):
     for y in range(this - YEARS, this + 1):
         fi = _latest("bulk-income-statement_%d_annual-*.parquet" % y)
         if not fi: continue
-        inc = pd.read_parquet(fi, columns=["symbol", "fiscalYear", "reportedCurrency", "revenue", "netIncome", "epsDiluted"])
+        inc = pd.read_parquet(fi, columns=["symbol", "fiscalYear", "reportedCurrency", "revenue", "netIncome", "epsDiluted",
+                                           "depreciationAndAmortization", "grossProfit", "ebitda"])
         inc = inc[inc["symbol"].isin(want)].drop_duplicates("symbol", keep="last").set_index("symbol")
         fc = _latest("bulk-cash-flow-statement_%d_annual-*.parquet" % y)
         fb = _latest("bulk-balance-sheet-statement_%d_annual-*.parquet" % y)
         cf = pd.read_parquet(fc, columns=["symbol", "freeCashFlow"]).drop_duplicates("symbol", keep="last").set_index("symbol")["freeCashFlow"] if fc else {}
-        bs = pd.read_parquet(fb, columns=["symbol", "totalStockholdersEquity", "totalDebt"]).drop_duplicates("symbol", keep="last").set_index("symbol") if fb else None
+        bs = pd.read_parquet(fb, columns=["symbol", "totalStockholdersEquity", "totalDebt", "totalAssets",
+                                          "goodwillAndIntangibleAssets", "cashAndShortTermInvestments"]
+                             ).drop_duplicates("symbol", keep="last").set_index("symbol") if fb else None
         for s, r in inc.iterrows():
-            d = data.setdefault(s, {"cur": None, "rows": []})
+            d = data.setdefault(s, {"cur": None, "rows": [], "x": {}})
             if isinstance(r["reportedCurrency"], str): d["cur"] = r["reportedCurrency"]
             eq = debt = None
+            x = {"da": num(r["depreciationAndAmortization"]), "gp": num(r["grossProfit"]), "ebitda": num(r["ebitda"])}
             if bs is not None and s in bs.index:
                 eq, debt = num(bs.at[s, "totalStockholdersEquity"]), num(bs.at[s, "totalDebt"])
+                x.update(assets=num(bs.at[s, "totalAssets"]), gw=num(bs.at[s, "goodwillAndIntangibleAssets"]),
+                         cash=num(bs.at[s, "cashAndShortTermInvestments"]))
+            d["x"] = x
             d["rows"].append([y, num(r["revenue"]), num(r["netIncome"]), num(r["epsDiluted"]),
                               num(cf.get(s)) if fc else None, eq, debt])
     for d in data.values(): d["rows"] = d["rows"][-YEARS:]
     try:
         with open(HIST_CACHE, "w", encoding="utf-8") as fh:
-            json.dump({"_symbols": sorted(want), "data": data}, fh, separators=(",", ":"))
+            json.dump({"_v": VERSION, "_symbols": sorted(want), "data": data}, fh, separators=(",", ":"))
     except Exception as e:
         print("[WARN] history cache not saved:", e)
     return data

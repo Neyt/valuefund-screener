@@ -22,6 +22,7 @@ try:
 except Exception as _e:
     enrich = None
     print("[WARN] extras disabled:", _e)
+import screener_playbooks as playbooks
 
 def soft(fn, default, *a, **k):
     """Run an optional step; never let it stop the publish."""
@@ -135,6 +136,7 @@ def main():
 
     prof = soft("profiles", {})
     fx = soft("fx_rates", {"as_of": None, "rates": {}})
+    hist = soft("history", {}, [r["ticker"] for r in rows])
     for r in rows:
         pr = prof.get(r["ticker"], {})
         r["_cur"] = pr.get("cur") or ("USD" if "." not in r["ticker"] else None)
@@ -148,7 +150,7 @@ def main():
             r["_age"] = (today - date.fromisoformat((r.get("analysis_date") or "")[:10])).days
         except ValueError:
             r["_age"] = None
-        r["_f"] = factors(r)
+        r["_pb"], r["_grp"], r["_f"], r["_metrics"], r["_review"], r["_notes"] = playbooks.build(r, hist.get(r["ticker"]), fx["rates"], enrich)
         if r["_kind"] != "company": r["_status"] = r["_kind"]
         elif r["_age"] is None or r["_age"] > MAX_AGE_DAYS: r["_status"] = "stale"
         elif r["_flags"]: r["_status"] = "check"
@@ -170,20 +172,31 @@ def main():
         if r["_status"] == "ok" and num(r.get("piotroski_score")) is None and num(r.get("altman_z")) is None:
             r["_status"] = "nodata"
     pool = [r for r in rows if r["_status"] == "ok"]
+    # percentiles: banks, insurers, REITs, biotech and software are compared inside their own group
     dist = {}
-    for p, fs in WEIGHTS.items():
-        for k in pool[0]["_f"][p]:
-            dist[k] = sorted(r["_f"][p][k] for r in pool if r["_f"][p][k] is not None)
+    for r in pool:
+        for p in WEIGHTS:
+            for k, (_, v, _) in r["_f"][p].items():
+                if v is None: continue
+                dist.setdefault((r["_grp"], k), []).append(v)
+                if r["_grp"] != "*": dist.setdefault(("*", k), []).append(v)
+    for v in dist.values(): v.sort()
+    def dist_for(r, k):
+        d = dist.get((r["_grp"], k), [])
+        return d if len(d) >= 30 else dist.get(("*", k), d)
     w52 = sorted(v for v in (num(r.get("week52_position")) for r in pool) if v is not None)
     cat = sorted(v for v in (num(r.get("catalyst_score")) for r in pool) if v is not None)
 
     for r in rows:
-        r["_pc"] = {}; r["_pillar"] = {}
+        r["_pc"] = {}; r["_pillar"] = {}; r["_factors"] = {}
         for p in WEIGHTS:
-            vals = []
-            for k, v in r["_f"][p].items():
-                if v is not None and dist[k]:
-                    r["_pc"][k] = pct_rank(dist[k], v); vals.append(r["_pc"][k])
+            vals = []; r["_factors"][p] = []
+            for k, (label, v, shown) in r["_f"][p].items():
+                pc = None
+                if v is not None:
+                    d = dist_for(r, k)
+                    if d: pc = pct_rank(d, v); r["_pc"][k] = pc; vals.append(pc)
+                r["_factors"][p].append([label, shown, pc])
             r["_pillar"][p] = round(sum(vals) / len(vals), 1) if len(vals) >= 2 else None
         v = num(r.get("week52_position")); r["_pillar"]["momentum"] = pct_rank(w52, v) if v is not None and w52 else None
         v = num(r.get("catalyst_score"));  r["_pillar"]["catalysts"] = pct_rank(cat, v) if v is not None and cat else None
@@ -203,7 +216,6 @@ def main():
     rest = sorted((r for r in rows if r["_status"] != "ok"), key=lambda r: -(r["_comp"] or -1))
     for r in rest: r["_grade"] = "-"; r["_rank"] = None
     ordered = ranked + rest
-    hist = soft("history", {}, [r["ticker"] for r in ranked])
     ins = soft("insiders", {}, [r["ticker"] for r in ranked if r["_grade"] == "A"])
 
     extra = {}
@@ -218,7 +230,7 @@ def main():
         print("[WARN] value ranking not merged:", e)
 
     os.makedirs(OUT, exist_ok=True)
-    cols = ["t","n","g","c","v","q","s","sec","x","px","mc","mos","pe","pb","pio","alt","d","st","p","r","cur"]
+    cols = ["t","n","g","c","v","q","s","sec","x","px","mc","mos","pe","pb","pio","alt","d","st","p","r","cur","pl","ib","rv"]
     idx = []
     for i, r in enumerate(ordered):
         pg = i // PAGE + 1
@@ -230,13 +242,16 @@ def main():
                     None if num(r.get("pe_ratio")) is None else round(num(r.get("pe_ratio")), 2),
                     None if num(r.get("pb_ratio")) is None else round(num(r.get("pb_ratio")), 2),
                     num(r.get("piotroski_score")), None if num(r.get("altman_z")) is None else round(num(r.get("altman_z")), 1),
-                    (r.get("analysis_date") or "")[:10], r["_status"], pg, r["_rank"], r["_cur"]])
+                    (r.get("analysis_date") or "")[:10], r["_status"], pg, r["_rank"], r["_cur"],
+                    playbooks.NAMES[r["_pb"]], (ins.get(r["ticker"]) or {}).get("buy_usd") or None, len(r["_review"]) or None])
     counts = {}
     for r in rows: counts[r["_status"]] = counts.get(r["_status"], 0) + 1
     grades = {}
     for r in ranked: grades[r["_grade"]] = grades.get(r["_grade"], 0) + 1
+    pbc = {}
+    for r in ranked: pbc[playbooks.NAMES[r["_pb"]]] = pbc.get(playbooks.NAMES[r["_pb"]], 0) + 1
     meta = {"generated": datetime.now().isoformat()[:16], "total": len(rows), "ranked": n, "counts": counts,
-            "grades": grades, "fx_as_of": fx.get("as_of"), "max_age_days": MAX_AGE_DAYS, "weights": WEIGHTS, "cols": cols, "rows": idx}
+            "grades": grades, "playbooks": pbc, "fx_as_of": fx.get("as_of"), "max_age_days": MAX_AGE_DAYS, "weights": WEIGHTS, "cols": cols, "rows": idx}
     with open(os.path.join(OUT, "stocks_index.json"), "w", encoding="utf-8") as fh:
         json.dump(meta, fh, separators=(",", ":"))
 
@@ -253,7 +268,8 @@ def main():
                  "price": num(r.get("current_price")), "market_cap": num(r.get("market_cap")),
                  "date": (r.get("analysis_date") or "")[:10], "age": r["_age"], "status": r["_status"],
                  "grade": r["_grade"], "rank": r["_rank"], "ranked": n, "composite": r["_comp"],
-                 "dup_of": r.get("_dup_of"), "pillars": r["_pillar"], "pct": r["_pc"], "flags": r["_flags"],
+                 "dup_of": r.get("_dup_of"), "pillars": r["_pillar"], "pct": r["_pc"], "playbook": playbooks.NAMES[r["_pb"]],
+                 "own_group": r["_grp"] != "*", "factors": r["_factors"], "metrics": r["_metrics"], "review": r["_review"], "notes": r["_notes"], "flags": r["_flags"],
                  "catalysts": pj(r.get("catalysts")), "hidden_value": pj(r.get("hidden_value_notes")),
                  "short_thesis": (r.get("short_thesis") or "") if r.get("short_thesis") != "None" else "",
                  "detailed_thesis": (r.get("detailed_thesis") or "") if r.get("detailed_thesis") != "None" else ""}
@@ -273,6 +289,7 @@ def main():
 
     if os.path.exists(TPL): shutil.copyfile(TPL, HTML)
     else: print("[WARN] template missing:", TPL); return 3
+    print("  [OK] playbooks", pbc, "| to review", sum(1 for r in ranked if r["_review"]), "| debt fixed", sum(1 for r in rows if any("balance sheet" in x for x in r["_notes"])))
     print("  [OK] total %d | ranked %d | grades %s | excluded %s | pages %d" % (len(rows), n, grades, counts, pages))
     return 0
 
