@@ -103,10 +103,10 @@ svg text{fill:var(--mu);font-size:11px}
 <main id="detail" hidden></main>
 <footer>
 <b>How the grade works.</b> Funds, shells, duplicate listings, rows with impossible values and analyses older than <span id="age">30</span> days are removed first.
-Every remaining company gets a percentile score on value (45%), quality (30%) and safety (25%). Banks, insurers, REITs, biotech and software use their own factors and are compared inside their sector; the rest are compared with everyone.
+Every remaining company gets a percentile score on value (45%), quality (30%) and safety (25%). Banks, insurers, REITs, biotech, software, retail, industrials and holding companies use their own factors and are compared inside their sector; the rest are compared with everyone.
 Grades are on a curve: A is the top 10%, B the next 20%, C the next 30%, D the next 25%, F the rest.
 Market caps are converted to US dollars; prices stay in the listing's currency.
-A grade is a reason to read the filings, not a recommendation to buy or sell. Not investment advice.
+<span id="trk"></span> A grade is a reason to read the filings, not a recommendation to buy or sell. Not investment advice.
 </footer>
 </div>
 <script>
@@ -129,6 +129,7 @@ async function boot(){
   R=M.rows.map(a=>{const o={};M.cols.forEach((k,i)=>o[k]=a[i]);return o;});
   $('#upd').textContent='Updated '+M.generated.replace('T',' ')+' · '+M.total.toLocaleString()+' analyzed';
   $('#age').textContent=M.max_age_days;
+  if(M.track){const hz=(M.track.horizons||[]).filter(x=>x.top50!=null);$('#trk').textContent=hz.length?'Track record since '+M.track.since+': '+hz.map(x=>x.days+' days, top 50 '+(x.top50>=0?'+':'')+x.top50+'%'+(x.all!=null?' vs all ranked '+(x.all>=0?'+':'')+x.all+'%':'')).join('; ')+' (median price change).':'Track record: the top 50 is saved daily since '+M.track.since+'; the first 30-day reading comes a month later.';}
   const c=M.counts,g=M.grades,ex=(c.fund||0)+(c.shell||0)+(c.other||0);
   $('#tiles').innerHTML=[['Ranked companies',M.ranked,'after quality filters'],['Grade A',g.A||0,'top 10%'],['Grade B',g.B||0,'next 20%'],
     ['Funds and shells',ex,'removed'],['Data to check',(c.check||0)+(c.nodata||0),'removed'],['Stale or duplicate',(c.stale||0)+(c.dup||0),'removed']]
@@ -236,7 +237,7 @@ function detail(d){
   if(d.metrics&&d.metrics.length)h+='<div class="box full"><h3>'+esc(d.playbook)+' figures</h3><div class="kvs">'+d.metrics.map(m=>'<div>'+esc(m[0])+'<b>'+esc(m[1])+'</b></div>').join('')+'</div></div>';
   if(d.vr&&d.vr.sc){const v=d.vr;h+='<div class="box full"><h3>Daily liquid-stock ranking ('+esc(v.as_of||'')+')</h3><div class="kvs"><div>Rank<b>#'+v.rank+' of '+v.of+'</b></div><div>Value<b>'+nf(v.sc.value,0)+'</b></div><div>Quality<b>'+nf(v.sc.quality,0)+'</b></div><div>Safety<b>'+nf(v.sc.safety,0)+'</b></div></div>'+((v.notes||[]).length?'<p class="note" style="margin-top:10px">'+v.notes.map(esc).join(' · ')+'</p>':'')+'</div>';}
   if(d.hist&&d.hist.rows&&d.hist.rows.length>1){const r=d.hist.rows;h+='<div class="box full"><h3>'+r.length+'-year history (reported in '+esc(d.hist.cur||'local currency')+')</h3><div class="h4">'+spark(r,1,'Revenue')+spark(r,2,'Net income')+spark(r,4,'Free cash flow')+spark(r,3,'Diluted EPS')+spark(r,5,'Equity')+spark(r,6,'Debt')+'</div></div>';}
-  if(d.ins){const i=d.ins;h+='<div class="box full"><h3>Insider trades, last 12 months (SEC Form 4)</h3><div class="kvs"><div>Open-market buys<b>'+i.buys+' · $'+big(i.buy_usd)+'</b></div><div>Sells<b>'+i.sells+' · $'+big(i.sell_usd)+'</b></div></div>'+(i.last.length?i.last.map(t=>'<p class="note" style="margin:8px 0 0">'+esc(t[0])+' · '+esc(t[1])+' ('+esc(t[2])+') · '+(String(t[3]).startsWith('P')?'<b style="color:var(--A)">Buy</b>':'<b style="color:var(--F)">Sell</b>')+' '+Number(t[4]||0).toLocaleString()+' at '+nf(t[5],2)+'</p>').join(''):'<p class="note" style="margin-top:8px">No open-market buys or sells on file.</p>')+'</div>';}
+  if(d.ins){const i=d.ins;h+='<div class="box full"><h3>Insider trades, last 12 months (SEC Form 4)</h3><div class="kvs"><div>Buys by officers and directors<b>'+i.buys+' · $'+big(i.buy_usd)+'</b></div><div>Sells<b>'+i.sells+' · $'+big(i.sell_usd)+'</b></div><div>Block or financing purchases<b>'+(i.blocks||0)+' · $'+big(i.block_usd||0)+'</b></div></div>'+(i.last.length?i.last.map(t=>'<p class="note" style="margin:8px 0 0">'+esc(t[0])+' · '+esc(t[1])+' ('+esc(t[2])+') · '+(t[6]==='buy'?'<b style="color:var(--A)">Buy</b>':t[6]==='block'?'<b style="color:var(--C)">Block purchase</b>':'<b style="color:var(--F)">Sell</b>')+' '+Number(t[4]||0).toLocaleString()+' at '+nf(t[5],2)+'</p>').join(''):'<p class="note" style="margin-top:8px">No open-market buys or sells on file.</p>')+'</div>';}
   if(hidden)h+='<div class="box full"><h3>Possible hidden value (automatic notes)</h3>'+hidden+'</div>';
   if(cats)h+='<div class="box full"><h3>Catalysts</h3>'+cats+'</div>';
   if(d.short_thesis||d.detailed_thesis)h+='<div class="box full"><h3>Thesis</h3><p class="note">'+esc(d.short_thesis)+'</p><p class="note" style="white-space:pre-wrap">'+esc(d.detailed_thesis)+'</p></div>';

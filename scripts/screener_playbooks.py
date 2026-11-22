@@ -16,8 +16,10 @@ import math, re
 COST_OF_EQUITY = 0.10
 MINING = re.compile(r"Gold|Silver|Metals & Mining|Copper|Coal|Uranium|Precious Metals|Aluminum", re.I)
 NAMES = {"bank": "Bank", "insurance": "Insurer", "reit": "REIT", "biotech": "Biotech", "software": "Software",
-         "mining": "Mining", "energy": "Oil and gas", "shipping": "Shipping", "generic": "General"}
-OWN_GROUP = {"bank", "insurance", "reit", "biotech", "software"}
+         "mining": "Mining", "energy": "Oil and gas", "shipping": "Shipping", "generic": "General",
+         "retail": "Retail", "industrial": "Industrial", "holdco": "Holding company"}
+OWN_GROUP = {"bank", "insurance", "reit", "biotech", "software", "retail", "industrial", "holdco"}
+RETAIL = re.compile(r"Retail|Stores|Department", re.I)
 
 def num(v):
     try:
@@ -43,6 +45,9 @@ def which(r):
     if MINING.search(ind): return "mining"
     if "Oil & Gas" in ind: return "energy"
     if "Marine Shipping" in ind: return "shipping"
+    if ind == "Conglomerates": return "holdco"
+    if RETAIL.search(ind): return "retail"
+    if (r.get("sector") or "") == "Industrials": return "industrial"
     return "generic"
 
 def build(r, h, rates, enrich):
@@ -142,6 +147,43 @@ def build(r, h, rates, enrich):
         F = {"value": {"gpy": ("Gross profit / EV", None if evgp is None else clip(1 / evgp, 0, 5), "EV/GP " + x1(evgp)), "fcfy": G["fcfy"], "ey": G["ey"]},
              "quality": {"r40": ("Rule of 40", clip(r40, -1, 1.5), metrics[-1][1]), "gm": G["gm"], "piotroski": G["piotroski"]},
              "safety": pick("altman", "de", "curr")}
+    elif pb_name == "retail" and mc:
+        ebitda, da, ppe, inv = usd(x.get("ebitda")), usd(x.get("da")) or 0, usd(x.get("ppe")), usd(x.get("inv"))
+        evu = mc + (debt or 0) - (cash or 0)
+        ebit = None if ebitda is None else ebitda - da
+        evebit = (evu / ebit) if ebit and ebit > 0 and evu > 0 else None
+        gp = usd(x.get("gp"))
+        turns = ((rev - gp) / inv) if rev and gp is not None and inv and inv > 0 else None
+        metrics += [("EV / EBIT", x1(evebit)), ("Inventory turns", x1(turns)), ("Property and equipment / market cap", pct(ppe / mc) if ppe is not None else "–")]
+        if ppe is not None and ppe > 0.5 * mc: review.append("Property and equipment on the books above half the market cap: check owned real estate")
+        if ebit is not None:
+            F = {"value": {"ebity": ("EBIT / EV", None if not (evu > 0) else clip(ebit / evu, -1, 1), "EV/EBIT " + x1(evebit)), "fcfy": G["fcfy"], "pb": G["pb"]},
+                 "quality": {"turns": ("Inventory turns", clip(turns, 0, 30), x1(turns)), "om": G["om"], "roe": G["roe"], "piotroski": G["piotroski"]},
+                 "safety": pick("altman", "de", "curr")}
+    elif pb_name == "industrial" and mc and rev:
+        hist5 = [(w[7] / w[1]) for w in rows[-5:] if len(w) > 7 and w[7] is not None and w[1]]
+        evu = mc + (debt or 0) - (cash or 0)
+        da = usd(x.get("da")) or 0
+        if len(hist5) >= 3 and evu > 0:
+            norm = rev * (sum(hist5) / len(hist5))                      # through-cycle EBITDA at today's sales
+            ebitda = usd(x.get("ebitda"))
+            ebit = None if ebitda is None else ebitda - da
+            cap = (eq or 0) + (debt or 0) - (cash or 0)
+            roic = (ebit * 0.75 / cap) if ebit is not None and cap > 0 else None
+            evebit = (evu / ebit) if ebit and ebit > 0 else None
+            metrics += [("EV / through-cycle EBITDA", x1(evu / norm) if norm > 0 else "–"), ("EV / EBIT", x1(evebit)), ("Return on invested capital", pct(roic))]
+            if roic is not None and roic > 0.15 and evebit is not None and evebit < 8: review.append("Return on invested capital above 15% at under 8 times EBIT")
+            F = {"value": {"nebitda": ("Through-cycle EBITDA / EV", clip(norm / evu, -1, 1), metrics[-3][1] + "x"), "fcfy": G["fcfy"], "ey": G["ey"], "pb": G["pb"]},
+                 "quality": {"roic": ("Return on invested capital", clip(roic, -1, 1), pct(roic)), "om": G["om"], "piotroski": G["piotroski"], "revg": G["revg"]},
+                 "safety": pick("altman", "de", "curr")}
+    elif pb_name == "holdco" and mc:
+        lti = usd(x.get("lti"))
+        if lti is not None or cash is not None:
+            held = (lti or 0) + (cash or 0) - (debt or 0)
+            metrics += [("Investments + cash − debt / market cap", pct(held / mc))]
+            if held > mc: review.append("Investments and cash net of debt exceed the market cap: sum-of-the-parts discount")
+            F = {"value": {"held": ("Net investments / market cap", clip(held / mc, -2, 5), pct(held / mc)), "pb": G["pb"], "ey": G["ey"]},
+                 "quality": pick("roe", "piotroski", "om"), "safety": pick("altman", "de", "curr")}
     elif pb_name == "mining":
         if ev is not None and 0 < ev < 4: review.append("EV under 4 times EBITDA: check reserves in the technical report")
     elif pb_name == "energy":

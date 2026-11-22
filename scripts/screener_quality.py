@@ -15,7 +15,7 @@ Quality rules applied before anything is graded:
      A = top 10%, B = next 20%, C = next 30%, D = next 25%, F = rest.
 """
 import sqlite3, json, os, math, re, sys, shutil, argparse, bisect
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
     import screener_enrich as enrich
@@ -125,6 +125,41 @@ def pj(s):
         return []
     return d if isinstance(d, list) else []
 
+TRACK_DB = os.path.join(BASE, "database", "screener_track.db")
+
+def track_record(ranked, today):
+    """Save today's top 50 (and the whole ranking on Mondays or the first run) so the ranking can be
+    checked later: median price change of past top-50 lists against the median of everything ranked."""
+    try:
+        conn = sqlite3.connect(TRACK_DB)
+        conn.execute("CREATE TABLE IF NOT EXISTS snap(run_date TEXT, ticker TEXT, rank INTEGER, grade TEXT, "
+                     "composite REAL, px REAL, PRIMARY KEY(run_date, ticker))")
+        d0 = today.isoformat()
+        first = conn.execute("SELECT COUNT(*) FROM snap").fetchone()[0] == 0
+        full = first or today.weekday() == 0
+        for r in (ranked if full else ranked[:50]):
+            px = num(r.get("current_price"))
+            if px: conn.execute("INSERT OR IGNORE INTO snap VALUES(?,?,?,?,?,?)",
+                                (d0, r["ticker"], r["_rank"], r["_grade"], r["_comp"], px))
+        conn.commit()
+        now = {r["ticker"]: num(r.get("current_price")) for r in ranked}
+        def med(v):
+            v = sorted(v); n = len(v)
+            return None if not n else (v[n // 2] if n % 2 else (v[n // 2 - 1] + v[n // 2]) / 2)
+        out = {"since": conn.execute("SELECT MIN(run_date) FROM snap").fetchone()[0], "horizons": []}
+        for days in (30, 90, 180):
+            lo = (today - timedelta(days=days + 7)).isoformat(); hi = (today - timedelta(days=days)).isoformat()
+            rows = conn.execute("SELECT ticker, rank, px FROM snap WHERE run_date BETWEEN ? AND ?", (lo, hi)).fetchall()
+            ret = lambda sel: [now[t] / px - 1 for t, rk, px in rows if sel(rk) and now.get(t) and px]
+            top, allr = ret(lambda rk: rk <= 50), ret(lambda rk: True)
+            out["horizons"].append({"days": days, "top50": None if not top else round(med(top) * 100, 1),
+                                    "all": None if len(allr) < 200 else round(med(allr) * 100, 1), "n": len(top)})
+        conn.close()
+        return out
+    except Exception as e:
+        print("[WARN] track record skipped:", e)
+        return None
+
 def main():
     today = date.today()
     conn = sqlite3.connect("file:" + DB.replace("\\", "/") + "?mode=ro", uri=True)
@@ -216,7 +251,9 @@ def main():
     rest = sorted((r for r in rows if r["_status"] != "ok"), key=lambda r: -(r["_comp"] or -1))
     for r in rest: r["_grade"] = "-"; r["_rank"] = None
     ordered = ranked + rest
-    ins = soft("insiders", {}, [r["ticker"] for r in ranked if r["_grade"] == "A"])
+    ins = soft("insiders", {}, [r["ticker"] for r in ranked if r["_grade"] == "A"],
+               mcaps={r["ticker"]: r["_mc_usd"] for r in ranked if r["_mc_usd"]})
+    track = track_record(ranked, today)
 
     extra = {}
     try:
@@ -251,7 +288,7 @@ def main():
     pbc = {}
     for r in ranked: pbc[playbooks.NAMES[r["_pb"]]] = pbc.get(playbooks.NAMES[r["_pb"]], 0) + 1
     meta = {"generated": datetime.now().isoformat()[:16], "total": len(rows), "ranked": n, "counts": counts,
-            "grades": grades, "playbooks": pbc, "fx_as_of": fx.get("as_of"), "max_age_days": MAX_AGE_DAYS, "weights": WEIGHTS, "cols": cols, "rows": idx}
+            "grades": grades, "playbooks": pbc, "track": track, "fx_as_of": fx.get("as_of"), "max_age_days": MAX_AGE_DAYS, "weights": WEIGHTS, "cols": cols, "rows": idx}
     with open(os.path.join(OUT, "stocks_index.json"), "w", encoding="utf-8") as fh:
         json.dump(meta, fh, separators=(",", ":"))
 

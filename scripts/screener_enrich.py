@@ -62,7 +62,7 @@ def history(symbols):
     """{symbol: {"cur": "USD", "rows": [[year, revenue, net income, diluted EPS, free cash flow, equity, debt], ...],
                  "x": {latest-year extras: assets, gw (goodwill + intangibles), cash, da, gp, ebitda}}}"""
     import pandas as pd
-    VERSION = 2
+    VERSION = 3
     newest = max((os.path.getmtime(f) for f in glob.glob(FMP_CACHE + "/bulk-*_annual-*.parquet")), default=0)
     want = set(symbols)
     if os.path.exists(HIST_CACHE) and os.path.getmtime(HIST_CACHE) > newest:
@@ -89,7 +89,8 @@ def history(symbols):
         fb = _latest("bulk-balance-sheet-statement_%d_annual-*.parquet" % y)
         cf = pd.read_parquet(fc, columns=["symbol", "freeCashFlow"]).drop_duplicates("symbol", keep="last").set_index("symbol")["freeCashFlow"] if fc else {}
         bs = pd.read_parquet(fb, columns=["symbol", "totalStockholdersEquity", "totalDebt", "totalAssets",
-                                          "goodwillAndIntangibleAssets", "cashAndShortTermInvestments"]
+                                          "goodwillAndIntangibleAssets", "cashAndShortTermInvestments",
+                                          "propertyPlantEquipmentNet", "inventory", "longTermInvestments"]
                              ).drop_duplicates("symbol", keep="last").set_index("symbol") if fb else None
         for s, r in inc.iterrows():
             d = data.setdefault(s, {"cur": None, "rows": [], "x": {}})
@@ -99,10 +100,11 @@ def history(symbols):
             if bs is not None and s in bs.index:
                 eq, debt = num(bs.at[s, "totalStockholdersEquity"]), num(bs.at[s, "totalDebt"])
                 x.update(assets=num(bs.at[s, "totalAssets"]), gw=num(bs.at[s, "goodwillAndIntangibleAssets"]),
-                         cash=num(bs.at[s, "cashAndShortTermInvestments"]))
+                         cash=num(bs.at[s, "cashAndShortTermInvestments"]), ppe=num(bs.at[s, "propertyPlantEquipmentNet"]),
+                         inv=num(bs.at[s, "inventory"]), lti=num(bs.at[s, "longTermInvestments"]))
             d["x"] = x
             d["rows"].append([y, num(r["revenue"]), num(r["netIncome"]), num(r["epsDiluted"]),
-                              num(cf.get(s)) if fc else None, eq, debt])
+                              num(cf.get(s)) if fc else None, eq, debt, num(r["ebitda"])])
     for d in data.values(): d["rows"] = d["rows"][-YEARS:]
     try:
         with open(HIST_CACHE, "w", encoding="utf-8") as fh:
@@ -121,7 +123,7 @@ def _fmp_key():
     except Exception:
         return None
 
-def insiders(symbols, max_calls=900, max_age_days=7, max_seconds=420):
+def insiders(symbols, max_calls=900, max_age_days=7, max_seconds=420, mcaps=None):
     """{symbol: {"buys": n, "sells": n, "buy_usd": x, "sell_usd": x, "last": [[date, name, role, type, shares, price], ...]}}
     Only US filers have Form 4 data, so tickers with an exchange suffix are skipped."""
     key = _fmp_key()
@@ -155,17 +157,29 @@ def insiders(symbols, max_calls=900, max_age_days=7, max_seconds=420):
             conn.execute("INSERT OR REPLACE INTO insider_cache VALUES(?,?,?)", (s, datetime.now().isoformat(), json.dumps(slim)))
             conn.commit()
     cutoff = (date.today() - timedelta(days=365)).isoformat()
+    mcaps = mcaps or {}
     out = {}
     for s in symbols:
         row = conn.execute("SELECT payload FROM insider_cache WHERE ticker=?", (s,)).fetchone()
         if not row: continue
         tx = [t for t in json.loads(row[0]) if t[0] and t[0] >= cutoff and (t[3] or "")[:2] in ("P-", "S-")]
-        d = {"buys": 0, "sells": 0, "buy_usd": 0.0, "sell_usd": 0.0, "last": tx[:6]}
+        d = {"buys": 0, "sells": 0, "buy_usd": 0.0, "sell_usd": 0.0, "blocks": 0, "block_usd": 0.0, "last": []}
+        mc = mcaps.get(s)
         for t in tx:
             usd = (t[4] or 0) * (t[5] or 0)
-            if t[3].startswith("P-"): d["buys"] += 1; d["buy_usd"] += usd
-            else: d["sells"] += 1; d["sell_usd"] += usd
-        d["buy_usd"], d["sell_usd"] = round(d["buy_usd"]), round(d["sell_usd"])
+            role = (t[2] or "").lower()
+            kind = "sell"
+            if t[3].startswith("P-"):
+                # a purchase by a large holder who is not an officer or director, or one above 2% of the
+                # company's value, is almost always a financing or a block deal, not a manager buying shares
+                insider = ("officer" in role or "director" in role)
+                big = bool(mc) and usd > 0.02 * mc
+                if insider and not big: kind = "buy"; d["buys"] += 1; d["buy_usd"] += usd
+                else: kind = "block"; d["blocks"] += 1; d["block_usd"] += usd
+            else:
+                d["sells"] += 1; d["sell_usd"] += usd
+            if len(d["last"]) < 6: d["last"].append(t + [kind])
+        for k in ("buy_usd", "sell_usd", "block_usd"): d[k] = round(d[k])
         out[s] = d
     conn.close()
     print("  [OK] insiders: %d fetched this run, %d with data" % (calls, len(out)))
