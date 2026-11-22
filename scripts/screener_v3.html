@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deep-Value Screener · valuefund.substack.com</title>
+<style>
+:root{--bg:#0b1320;--pn:#111c2e;--pn2:#0e1828;--bd:#1f2e47;--tx:#dbe7f5;--mu:#8298b5;--ac:#5aabf0;
+--A:#3fb56a;--B:#b9c23c;--C:#e0a03c;--D:#e0703c;--F:#d9534f;--X:#5d6f88}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+a{color:var(--ac);text-decoration:none}
+.wrap{max-width:1320px;margin:0 auto;padding:16px}
+header.top{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;justify-content:space-between;margin-bottom:14px}
+h1{font-size:22px;margin:0;letter-spacing:.2px}h1 small{display:block;font-size:12px;color:var(--mu);font-weight:400}
+.upd{font-size:12px;color:var(--mu)}
+.tiles{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px}
+.tile{background:var(--pn);border:1px solid var(--bd);border-radius:10px;padding:10px 12px}
+.tile b{display:block;font-size:22px;line-height:1.2}.tile span{font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.5px}
+.tile em{display:block;font-style:normal;font-size:11px;color:var(--mu)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+input[type=search],select{background:var(--pn2);border:1px solid var(--bd);color:var(--tx);border-radius:8px;padding:9px 10px;font:inherit;min-height:40px}
+input[type=search]{flex:1 1 220px}
+.chips{display:flex;gap:6px}.chip{min-width:40px;min-height:40px;border-radius:8px;border:1px solid var(--bd);background:var(--pn2);color:var(--mu);font:600 14px inherit;cursor:pointer;padding:0 10px}
+.chip.on{border-color:var(--ac);color:var(--ac);background:#5aabf01f}
+label.tg{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--mu);min-height:40px}
+button.btn{min-height:40px;border-radius:8px;border:1px solid var(--bd);background:var(--pn2);color:var(--tx);font:inherit;padding:0 12px;cursor:pointer}
+.count{font-size:13px;color:var(--mu);margin:0 0 8px}
+table{width:100%;border-collapse:collapse;background:var(--pn);border:1px solid var(--bd);border-radius:10px;overflow:hidden}
+th,td{padding:9px 7px;text-align:right;border-bottom:1px solid var(--bd);white-space:nowrap;font-size:13.5px}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--mu);cursor:pointer;user-select:none;background:var(--pn2);position:sticky;top:0}
+th.l,td.l{text-align:left}tbody tr{cursor:pointer}tbody tr:hover{background:#16243a}
+td .nm{display:block;color:var(--mu);font-size:12px;max-width:260px;overflow:hidden;text-overflow:ellipsis}
+td b.tk{font-size:14px}
+.g{display:inline-block;min-width:28px;text-align:center;border-radius:6px;padding:2px 7px;font-weight:700;color:#08111d}
+.gA{background:var(--A)}.gB{background:var(--B)}.gC{background:var(--C)}.gD{background:var(--D)}.gF{background:var(--F)}.gX{background:var(--X);color:#e8eef7}
+.mb{display:inline-block;width:54px;height:7px;border-radius:4px;background:#22324d;vertical-align:middle;overflow:hidden;margin-left:6px}
+.mb i{display:block;height:100%;background:var(--ac)}
+.pager{display:flex;gap:10px;justify-content:center;align-items:center;margin:14px 0;color:var(--mu);font-size:13px}
+.cards{display:none}
+.card{background:var(--pn);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:10px;cursor:pointer}
+.card .r1{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.card .tk{font-size:17px;font-weight:700}.card .nm{color:var(--mu);font-size:13px}
+.card .sc{font-size:22px;font-weight:700;text-align:right;line-height:1}.card .sc small{font-size:11px;color:var(--mu);font-weight:400}
+.card .pl{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;font-size:12px;color:var(--mu)}
+.card .pl .mb{display:block;width:100%;margin:4px 0 0}
+.card .kv{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:10px;font-size:13px;color:var(--mu)}.card .kv b{color:var(--tx);font-weight:600}
+.why{font-size:12px;color:var(--C)}
+footer{color:var(--mu);font-size:12px;margin:22px 0 10px;border-top:1px solid var(--bd);padding-top:12px}
+.back{display:inline-block;margin-bottom:10px;min-height:40px;line-height:40px}
+.hd{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;background:var(--pn);border:1px solid var(--bd);border-radius:12px;padding:16px}
+.hd h2{margin:0;font-size:24px}.hd .sub{color:var(--mu);font-size:13px}.hd .px{font-size:26px;font-weight:700;margin-top:6px}
+.hd .score{text-align:right}.hd .score .big{font-size:44px;font-weight:800;line-height:1}.hd .score .big small{font-size:16px;color:var(--mu);font-weight:400}
+.warn{border:1px solid #7a4a1e;background:#2a1c0e;color:#f1c189;border-radius:10px;padding:10px 14px;margin-top:12px;font-size:14px}
+.warn ul{margin:6px 0 0;padding-left:18px}.warn.bad{border-color:#7a2a2a;background:#2a1212;color:#f0a3a0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.box{background:var(--pn);border:1px solid var(--bd);border-radius:12px;padding:14px}
+.box h3{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--mu)}
+.box.full{grid-column:1/-1}
+.row{display:grid;grid-template-columns:150px 80px 1fr 38px;gap:8px;align-items:center;padding:5px 0;font-size:13.5px}
+.row .tr{height:8px;background:#22324d;border-radius:4px;overflow:hidden}.row .tr i{display:block;height:100%;background:var(--ac)}
+.row .v{text-align:right}.row .p{text-align:right;color:var(--mu);font-size:12px}
+.sec{font-size:12px;color:var(--ac);margin:10px 0 2px;text-transform:uppercase;letter-spacing:.5px}
+.val .row{grid-template-columns:150px 90px 1fr 70px}
+.val .up{color:var(--A)}.val .dn{color:var(--F)}
+.kvs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.kvs div{font-size:12px;color:var(--mu)}.kvs b{display:block;color:var(--tx);font-size:15px}
+.note{font-size:13.5px;margin:0 0 8px}.note b{color:var(--ac)}
+.fine{color:var(--mu);font-size:12px;margin:6px 0 0}
+.h4{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+svg text{fill:var(--mu);font-size:11px}
+@media(max-width:860px){
+ .tiles{grid-template-columns:repeat(3,1fr)}table{display:none}.cards{display:block}
+ .grid{grid-template-columns:1fr}.kvs{grid-template-columns:repeat(2,1fr)}.h4{grid-template-columns:repeat(2,1fr)}
+ .row{grid-template-columns:118px 66px 1fr 30px}.val .row{grid-template-columns:118px 76px 1fr 60px}
+ .hd .score{text-align:left}body{font-size:16px}.wrap{padding:12px}
+}
+@media(max-width:420px){.tiles{grid-template-columns:repeat(2,1fr)}.chips{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top"><h1>Deep-Value Screener<small>valuefund.substack.com</small></h1><div class="upd" id="upd">Loading…</div></header>
+<main id="list">
+  <div class="tiles" id="tiles"></div>
+  <div class="bar">
+    <input type="search" id="q" placeholder="Search ticker or company" autocomplete="off">
+    <select id="fs"><option value="">All sectors</option></select>
+    <select id="fm"><option value="0">Any market cap</option><option value="1e7">Over $10M</option><option value="5e7">Over $50M</option><option value="2.5e8">Over $250M</option><option value="1e9">Over $1B</option></select>
+    <div class="chips" id="chips"></div>
+    <label class="tg"><input type="checkbox" id="us"> US-listed only</label>
+    <label class="tg"><input type="checkbox" id="ex"> Show excluded</label>
+    <button class="btn" id="csv">CSV</button>
+  </div>
+  <p class="count" id="count"></p>
+  <table><thead><tr id="th"></tr></thead><tbody id="tb"></tbody></table>
+  <div class="cards" id="cards"></div>
+  <div class="pager"><button class="btn" id="pv">Previous</button><span id="pg"></span><button class="btn" id="nx">Next</button></div>
+</main>
+<main id="detail" hidden></main>
+<footer>
+<b>How the grade works.</b> Funds, shells, duplicate listings, rows with impossible values and analyses older than <span id="age">30</span> days are removed first.
+Every remaining company gets a percentile score against the others on value (45%), quality (30%) and safety (25%).
+Grades are on a curve: A is the top 10%, B the next 20%, C the next 30%, D the next 25%, F the rest.
+Market caps are converted to US dollars; prices stay in the listing's currency.
+A grade is a reason to read the filings, not a recommendation to buy or sell. Not investment advice.
+</footer>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nf=(v,d)=>v==null||isNaN(v)?'–':Number(v).toFixed(d==null?1:d);
+const mc=v=>v==null?'–':'$'+(v>=1e9?(v/1e9).toFixed(2)+'B':v>=1e6?(v/1e6).toFixed(0)+'M':(v/1e3).toFixed(0)+'K');
+const big=v=>v==null?'–':Math.abs(v)>=1e9?(v/1e9).toFixed(2)+'B':Math.abs(v)>=1e6?(v/1e6).toFixed(1)+'M':Math.abs(v)>=1e3?(v/1e3).toFixed(0)+'K':Number(v).toFixed(2);
+const ccy=c=>c&&c!=='USD'?' <small style="color:var(--mu)">'+esc(c)+'</small>':'';
+const pc=v=>v==null||isNaN(v)?'–':(v*100).toFixed(1)+'%';
+const ST={ok:'Ranked',fund:'Fund or investment vehicle',shell:'Shell or SPAC',other:'Not common stock',stale:'Analysis is out of date',check:'Data needs checking',dup:'Duplicate listing',nodata:'Not enough data'};
+const COLS=[['r','#',0],['t','Company',1],['sec','Sector',1],['mc','Mkt cap $',0],['px','Price',0],['c','Score',0],['v','Value',0],['q','Quality',0],['s','Safety',0],['mos','MoS %',0],['pe','P/E',0],['pb','P/B',0],['pio','Piotroski',0],['g','Grade',0],['d','Analyzed',0]];
+let M=null,R=[],F=[],page=1,sk='r',sd=1,grade='ALL';const PS=50,cache={};
+const gcls=g=>'g g'+(/[ABCDF]/.test(g)?g:'X');
+const bar=v=>'<span class="mb"><i style="width:'+(v==null?0:v)+'%"></i></span>';
+
+async function boot(){
+  try{const r=await fetch('data/stocks_index.json?'+Date.now());M=await r.json();}
+  catch(e){$('#upd').textContent='Could not load data.';return;}
+  R=M.rows.map(a=>{const o={};M.cols.forEach((k,i)=>o[k]=a[i]);return o;});
+  $('#upd').textContent='Updated '+M.generated.replace('T',' ')+' · '+M.total.toLocaleString()+' analyzed';
+  $('#age').textContent=M.max_age_days;
+  const c=M.counts,g=M.grades,ex=(c.fund||0)+(c.shell||0)+(c.other||0);
+  $('#tiles').innerHTML=[['Ranked companies',M.ranked,'after quality filters'],['Grade A',g.A||0,'top 10%'],['Grade B',g.B||0,'next 20%'],
+    ['Funds and shells',ex,'removed'],['Data to check',(c.check||0)+(c.nodata||0),'removed'],['Stale or duplicate',(c.stale||0)+(c.dup||0),'removed']]
+    .map(t=>'<div class="tile"><span>'+t[0]+'</span><b>'+Number(t[1]).toLocaleString()+'</b><em>'+t[2]+'</em></div>').join('');
+  [...new Set(R.map(r=>r.sec))].sort().forEach(s=>{const o=document.createElement('option');o.value=o.textContent=s;$('#fs').appendChild(o);});
+  $('#chips').innerHTML=['ALL','A','B','C','D','F'].map(x=>'<button class="chip'+(x==='ALL'?' on':'')+'" data-g="'+x+'">'+(x==='ALL'?'All':x)+'</button>').join('');
+  $('#th').innerHTML=COLS.map(c=>'<th data-k="'+c[0]+'"'+(c[2]?' class="l"':'')+'>'+c[1]+'</th>').join('');
+  $('#chips').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;grade=b.dataset.g;document.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===b));page=1;apply();};
+  $('#th').onclick=e=>{const k=e.target.dataset.k;if(!k)return;if(sk===k)sd=-sd;else{sk=k;sd=(k==='r'||k==='t'||k==='sec'||k==='pe'||k==='pb'||k==='g')?1:-1;}page=1;apply();};
+  ['q','fs','fm','ex','us'].forEach(id=>$('#'+id).addEventListener('input',()=>{page=1;apply();}));
+  $('#pv').onclick=()=>{if(page>1){page--;render();scrollTo(0,0);}};
+  $('#nx').onclick=()=>{if(page*PS<F.length){page++;render();scrollTo(0,0);}};
+  $('#csv').onclick=csv;
+  const open=e=>{const el=e.target.closest('[data-t]');if(el)location.hash='s='+encodeURIComponent(el.dataset.t);};
+  $('#tb').onclick=open;$('#cards').onclick=open;
+  addEventListener('hashchange',route);apply();route();
+}
+function apply(){
+  const q=$('#q').value.trim().toLowerCase(),sec=$('#fs').value,mm=+$('#fm').value,ex=$('#ex').checked,us=$('#us').checked;
+  F=R.filter(r=>{
+    if(q){if(!(r.t.toLowerCase().includes(q)||r.n.toLowerCase().includes(q)))return false;}
+    else if(!ex&&r.st!=='ok')return false;
+    if(us&&(r.cur!=='USD'||r.t.includes('.')))return false;
+    if(sec&&r.sec!==sec)return false;
+    if(mm&&!(r.mc>=mm))return false;
+    if(grade!=='ALL'&&r.g!==grade)return false;
+    return true;});
+  F.sort((a,b)=>{let x=a[sk],y=b[sk];if(x==null&&y==null)return 0;if(x==null)return 1;if(y==null)return -1;return (x<y?-1:x>y?1:0)*sd;});
+  render();
+}
+function render(){
+  const s=F.slice((page-1)*PS,page*PS);
+  $('#count').textContent=F.length.toLocaleString()+' companies'+($('#q').value.trim()?' (search includes excluded rows)':'');
+  $('#tb').innerHTML=s.map(r=>'<tr data-t="'+esc(r.t)+'"><td>'+(r.r||'–')+'</td><td class="l"><b class="tk">'+esc(r.t)+'</b><span class="nm">'+esc(r.n)+(r.st!=='ok'?' · <span class="why">'+ST[r.st]+'</span>':'')+'</span></td><td class="l">'+esc(r.sec)+'</td><td>'+mc(r.mc)+'</td><td>'+nf(r.px,2)+ccy(r.cur)+'</td><td><b>'+nf(r.c,0)+'</b>'+bar(r.c)+'</td><td>'+nf(r.v,0)+'</td><td>'+nf(r.q,0)+'</td><td>'+nf(r.s,0)+'</td><td>'+nf(r.mos,0)+'</td><td>'+nf(r.pe,1)+'</td><td>'+nf(r.pb,2)+'</td><td>'+(r.pio==null?'–':r.pio+'/9')+'</td><td><span class="'+gcls(r.g)+'">'+esc(r.g)+'</span></td><td>'+esc(r.d)+'</td></tr>').join('');
+  $('#cards').innerHTML=s.map(r=>'<div class="card" data-t="'+esc(r.t)+'"><div class="r1"><div><span class="'+gcls(r.g)+'">'+esc(r.g)+'</span> <span class="tk">'+esc(r.t)+'</span><div class="nm">'+esc(r.n)+'</div>'+(r.st!=='ok'?'<div class="why">'+ST[r.st]+'</div>':'')+'</div><div class="sc">'+nf(r.c,0)+'<br><small>'+(r.r?'#'+r.r:'score')+'</small></div></div><div class="pl"><div>Value '+nf(r.v,0)+bar(r.v)+'</div><div>Quality '+nf(r.q,0)+bar(r.q)+'</div><div>Safety '+nf(r.s,0)+bar(r.s)+'</div></div><div class="kv"><span>Cap <b>'+mc(r.mc)+'</b></span><span>P/E <b>'+nf(r.pe,1)+'</b></span><span>P/B <b>'+nf(r.pb,2)+'</b></span><span>Piotroski <b>'+(r.pio==null?'–':r.pio)+'</b></span><span>'+esc(r.sec)+'</span></div></div>').join('');
+  $('#pg').textContent='Page '+page+' of '+Math.max(1,Math.ceil(F.length/PS));
+}
+function csv(){
+  const h=M.cols.join(',');const b=F.map(r=>M.cols.map(k=>{const v=r[k];return typeof v==='string'?'"'+v.replace(/"/g,'""')+'"':(v==null?'':v);}).join(','));
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([h+'\n'+b.join('\n')],{type:'text/csv'}));a.download='screener.csv';a.click();
+}
+async function route(){
+  const m=location.hash.match(/^#s=(.+)$/);
+  if(!m){$('#detail').hidden=true;$('#list').hidden=false;return;}
+  const t=decodeURIComponent(m[1]),r=R.find(x=>x.t===t);
+  $('#list').hidden=true;$('#detail').hidden=false;scrollTo(0,0);
+  if(!r){$('#detail').innerHTML='<a class="back" href="#">← Back to the screener</a><p>Ticker not found.</p>';return;}
+  $('#detail').innerHTML='<a class="back" href="#">← Back to the screener</a><p class="count">Loading '+esc(t)+'…</p>';
+  try{
+    if(!cache[r.p]){const f=await fetch('data/stocks_p'+String(r.p).padStart(3,'0')+'.json?'+M.generated);cache[r.p]=(await f.json()).stocks;}
+    detail(cache[r.p][t]);
+  }catch(e){$('#detail').innerHTML+='<p>Could not load this company.</p>';}
+}
+function spark(rows,i,label){
+  const v=rows.map(r=>r[i]);if(v.every(x=>x==null))return '';
+  const mx=Math.max.apply(null,v.map(x=>Math.abs(x||0)))||1,W=280,H=84,bw=W/rows.length,neg=v.some(x=>x<0),z=neg?H/2:H,sc=z/mx;
+  let last=null;v.forEach(x=>{if(x!=null)last=x;});
+  let s='<div><div class="fine" style="margin:0 0 4px">'+label+' <b style="color:var(--tx)">'+big(last)+'</b></div><svg viewBox="0 0 '+W+' '+(H+14)+'" width="100%" role="img" aria-label="'+label+' by year">';
+  rows.forEach((r,k)=>{const x=r[i];s+='<text x="'+(k*bw+bw/2)+'" y="'+(H+12)+'" text-anchor="middle" style="font-size:9px">'+String(r[0]).slice(2)+'</text>';if(x==null)return;const hh=Math.max(1,Math.abs(x)*sc);s+='<rect x="'+(k*bw+2)+'" y="'+(x>=0?z-hh:z)+'" width="'+(bw-4)+'" height="'+hh+'" rx="2" fill="'+(x>=0?'#5aabf0':'#d9534f')+'"><title>'+r[0]+': '+big(x)+'</title></rect>';});
+  return s+'</svg></div>';
+}
+function radar(p){
+  const ax=[['Value',p.value],['Quality',p.quality],['Safety',p.safety],['Momentum',p.momentum],['Catalysts',p.catalysts]],cx=150,cy=128,R0=88;
+  const pt=(i,v)=>{const a=-Math.PI/2+i*2*Math.PI/ax.length;return [cx+Math.cos(a)*R0*v/100,cy+Math.sin(a)*R0*v/100];};
+  let s='<svg viewBox="0 0 300 250" width="100%" style="max-width:340px;display:block;margin:auto" role="img" aria-label="Pillar scores">';
+  [25,50,75,100].forEach(v=>{s+='<polygon fill="none" stroke="#22324d" points="'+ax.map((_,i)=>pt(i,v).join(',')).join(' ')+'"/>';});
+  ax.forEach((a,i)=>{const e=pt(i,100),l=pt(i,124);s+='<line x1="'+cx+'" y1="'+cy+'" x2="'+e[0]+'" y2="'+e[1]+'" stroke="#22324d"/><text x="'+l[0]+'" y="'+(l[1]+4)+'" text-anchor="middle">'+a[0]+' '+(a[1]==null?'–':Math.round(a[1]))+'</text>';});
+  s+='<polygon fill="#5aabf055" stroke="#5aabf0" stroke-width="2" points="'+ax.map((a,i)=>pt(i,a[1]==null?0:a[1]).join(',')).join(' ')+'"/></svg>';
+  return s;
+}
+function detail(d){
+  if(!d){$('#detail').innerHTML+='<p>No detail for this ticker.</p>';return;}
+  const w=[];
+  if(d.piotroski_score!=null&&d.piotroski_score<=3)w.push('Weak Piotroski score ('+d.piotroski_score+' of 9)');
+  if(d.altman_z!=null&&d.altman_z<1.8)w.push('Altman Z of '+nf(d.altman_z,1)+' is in the distress zone (below 1.8)');
+  if(d.debt_equity!=null&&d.debt_equity>2)w.push('Debt is '+nf(d.debt_equity,1)+' times equity');
+  if(d.current_ratio!=null&&d.current_ratio<1)w.push('Current ratio below 1 ('+nf(d.current_ratio,2)+')');
+  if(d.fcf_yield!=null&&d.fcf_yield<0)w.push('Negative free cash flow');
+  if(d.short_interest_pct!=null&&d.short_interest_pct>0.15)w.push('Short interest of '+pc(d.short_interest_pct));
+  if(d.pe_ratio!=null&&d.pe_ratio<=0)w.push('No earnings (negative P/E)');
+  if(d.hist&&d.hist.cur&&d.cur&&d.hist.cur!==d.cur&&!(d.cur==='GBp'&&d.hist.cur==='GBP'))w.push('Reports in '+d.hist.cur+' but trades in '+d.cur+': per-share estimates can be distorted');
+  const row=(lab,val,p)=>'<div class="row"><span>'+lab+'</span><span class="v">'+val+'</span><span class="tr"><i style="width:'+(p==null?0:p)+'%"></i></span><span class="p">'+(p==null?'–':Math.round(p))+'</span></div>';
+  const P=d.pct||{};
+  const vrow=(lab,v)=>{if(v==null||!d.price)return '';const up=(v/d.price-1)*100,mx=Math.max(v,d.price);return '<div class="row"><span>'+lab+'</span><span class="v">'+nf(v,2)+'</span><span class="tr"><i style="width:'+Math.max(2,Math.min(100,v/mx*100))+'%"></i></span><span class="p '+(up>=0?'up':'dn')+'">'+(up>=0?'+':'')+Math.max(-99,Math.min(999,up)).toFixed(0)+'%</span></div>';};
+  const hidden=(d.hidden_value||[]).map(h=>'<p class="note"><b>'+esc(h.type)+'</b> '+esc(h.detail)+'</p>').join('');
+  const cats=(d.catalysts||[]).map(h=>'<p class="note">'+esc(typeof h==='string'?h:(h.type||'')+' '+(h.detail||h.description||''))+'</p>').join('');
+  let h='<a class="back" href="#">← Back to the screener</a>';
+  h+='<div class="hd"><div><h2>'+esc(d.ticker)+' <span class="'+gcls(d.grade)+'">'+esc(d.grade)+'</span></h2><div>'+esc(d.name)+'</div><div class="sub">'+esc(d.sector)+' · '+esc(d.industry)+'</div><div class="px">'+nf(d.price,2)+ccy(d.cur)+'</div><div class="sub">'+(d.cur&&d.cur!=='USD'&&d.px_usd!=null?'About $'+nf(d.px_usd,2)+' · ':'')+'Market cap '+mc(d.mc_usd!=null?d.mc_usd:d.market_cap)+' · analyzed '+esc(d.date)+'</div></div>';
+  h+='<div class="score"><div class="sub">Composite score</div><div class="big">'+nf(d.composite,0)+'<small> /100</small></div><div class="sub">'+(d.rank?'Rank #'+d.rank+' of '+d.ranked.toLocaleString():ST[d.status])+'</div></div></div>';
+  if(d.status!=='ok'){h+='<div class="warn bad"><b>Not ranked: '+ST[d.status]+'.</b>'+(d.dup_of?' The main listing is <a href="#s='+encodeURIComponent(d.dup_of)+'">'+esc(d.dup_of)+'</a>.':'')+(d.flags&&d.flags.length?'<ul>'+d.flags.map(f=>'<li>'+esc(f)+'</li>').join('')+'</ul>':'')+'</div>';}
+  if(w.length)h+='<div class="warn"><b>'+w.length+' thing'+(w.length>1?'s':'')+' to check</b><ul>'+w.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul></div>';
+  h+='<div class="grid"><div class="box"><h3>Five pillars (percentile vs ranked companies)</h3>'+radar(d.pillars||{})+'<p class="fine">Value, quality and safety make the score. Momentum and catalysts are shown for context only.</p></div>';
+  h+='<div class="box val"><h3>Value estimates vs price '+nf(d.price,2)+'</h3>'+(vrow('Graham number',d.graham_number)+vrow('Discounted cash flow',d.dcf_value)+vrow('Net-net value',d.net_net_value)+vrow('Book value per share',d.bvps)||'<p class="note">No estimates available.</p>')+'<p class="fine">Margin of safety in the database: '+nf(d.margin_of_safety,0)+'%. Estimates are mechanical; check them against the filings.</p>';
+  h+='<div class="kvs" style="margin-top:12px"><div>P/E<b>'+nf(d.pe_ratio,1)+'</b></div><div>P/B<b>'+nf(d.pb_ratio,2)+'</b></div><div>P/S<b>'+nf(d.ps_ratio,2)+'</b></div><div>EV/EBITDA<b>'+nf(d.ev_ebitda,1)+'</b></div><div>Dividend yield<b>'+pc(d.dividend_yield)+'</b></div><div>Insiders own<b>'+pc(d.insider_pct)+'</b></div><div>52-week position<b>'+pc(d.week52_position)+'</b></div><div>Beta<b>'+nf(d.beta,2)+'</b></div></div></div>';
+  h+='<div class="box full"><h3>Factor by factor (bar = percentile, higher is better)</h3><div class="sec">Value</div>'+row('Earnings yield',d.pe_ratio>0?pc(1/d.pe_ratio):'–',P.ey)+row('Margin of safety',nf(d.margin_of_safety,0)+'%',P.mos)+row('Price to book',nf(d.pb_ratio,2),P.pb)+row('Free cash flow yield',pc(d.fcf_yield),P.fcfy)+row('EV / EBITDA',nf(d.ev_ebitda,1),P.evebitda);
+  h+='<div class="sec">Quality</div>'+row('Piotroski',d.piotroski_score==null?'–':d.piotroski_score+'/9',P.piotroski)+row('Return on equity',pc(d.roe),P.roe)+row('Gross margin',pc(d.gross_margin),P.gm)+row('Operating margin',pc(d.operating_margin),P.om)+row('Revenue growth',pc(d.revenue_growth),P.revg);
+  h+='<div class="sec">Safety</div>'+row('Altman Z',nf(d.altman_z,1),P.altman)+row('Debt to equity',nf(d.debt_equity,2),P.de)+row('Current ratio',nf(d.current_ratio,2),P.curr)+'</div>';
+  if(d.vr&&d.vr.sc){const v=d.vr;h+='<div class="box full"><h3>Daily liquid-stock ranking ('+esc(v.as_of||'')+')</h3><div class="kvs"><div>Rank<b>#'+v.rank+' of '+v.of+'</b></div><div>Value<b>'+nf(v.sc.value,0)+'</b></div><div>Quality<b>'+nf(v.sc.quality,0)+'</b></div><div>Safety<b>'+nf(v.sc.safety,0)+'</b></div></div>'+((v.notes||[]).length?'<p class="note" style="margin-top:10px">'+v.notes.map(esc).join(' · ')+'</p>':'')+'</div>';}
+  if(d.hist&&d.hist.rows&&d.hist.rows.length>1){const r=d.hist.rows;h+='<div class="box full"><h3>'+r.length+'-year history (reported in '+esc(d.hist.cur||'local currency')+')</h3><div class="h4">'+spark(r,1,'Revenue')+spark(r,2,'Net income')+spark(r,4,'Free cash flow')+spark(r,3,'Diluted EPS')+spark(r,5,'Equity')+spark(r,6,'Debt')+'</div></div>';}
+  if(d.ins){const i=d.ins;h+='<div class="box full"><h3>Insider trades, last 12 months (SEC Form 4)</h3><div class="kvs"><div>Open-market buys<b>'+i.buys+' · $'+big(i.buy_usd)+'</b></div><div>Sells<b>'+i.sells+' · $'+big(i.sell_usd)+'</b></div></div>'+(i.last.length?i.last.map(t=>'<p class="note" style="margin:8px 0 0">'+esc(t[0])+' · '+esc(t[1])+' ('+esc(t[2])+') · '+(String(t[3]).startsWith('P')?'<b style="color:var(--A)">Buy</b>':'<b style="color:var(--F)">Sell</b>')+' '+Number(t[4]||0).toLocaleString()+' at '+nf(t[5],2)+'</p>').join(''):'<p class="note" style="margin-top:8px">No open-market buys or sells on file.</p>')+'</div>';}
+  if(hidden)h+='<div class="box full"><h3>Possible hidden value (automatic notes)</h3>'+hidden+'</div>';
+  if(cats)h+='<div class="box full"><h3>Catalysts</h3>'+cats+'</div>';
+  if(d.short_thesis||d.detailed_thesis)h+='<div class="box full"><h3>Thesis</h3><p class="note">'+esc(d.short_thesis)+'</p><p class="note" style="white-space:pre-wrap">'+esc(d.detailed_thesis)+'</p></div>';
+  h+='</div>';
+  $('#detail').innerHTML=h;
+}
+boot();
+</script>
+</body>
+</html>
